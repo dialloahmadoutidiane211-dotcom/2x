@@ -13,7 +13,7 @@
     <!-- Alpine.js pour la réactivité -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen font-sans" x-data="appData()" x-init="initApp()">
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans overflow-x-hidden" x-data="appData()" x-init="initApp()">
 
     <!-- ANIMATION D'ALLUMAGE (SPLASH SCREEN CINÉMATIQUE) -->
     <div x-show="isLoading" 
@@ -43,13 +43,13 @@
                 <span>🎬</span><span>VMax</span>
             </h1>
             <div class="flex items-center space-x-2">
-                <!-- Bouton Actualiser avec SVG pro -->
+                <!-- Bouton Actualiser -->
                 <button @click="window.location.reload()" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition shadow-sm flex items-center space-x-1.5" title="Actualiser l'application">
                     <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     <span>Actualiser</span>
                 </button>
                 <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition shadow-sm">
-                    Accueil / Projets
+                    Accueil
                 </button>
             </div>
         </div>
@@ -66,9 +66,9 @@
                     <p class="text-sm text-gray-400">Gérez vos séries, mini-séries, courts et longs métrages.</p>
                 </div>
 
-                <!-- Grille des Projets + Nouvelle Carte "Nouveau Projet" Ultra-stylisée -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div @click="showNewProjectModal = true" class="bg-gradient-to-br from-blue-950/30 via-gray-900 to-purple-950/30 border border-blue-500/30 hover:border-blue-500/70 p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-xl hover:shadow-blue-500/10 flex flex-col items-center justify-center text-center space-y-3 min-h-[180px] group">
+                <!-- Grille des Projets + Carte "Nouveau Projet" -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div @click="showNewProjectModal = true" class="bg-gradient-to-br from-blue-950/30 via-gray-900 to-purple-950/30 border border-blue-500/30 hover:border-blue-500/70 p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-xl flex flex-col items-center justify-center text-center space-y-3 min-h-[160px] group">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
                             +
                         </div>
@@ -79,7 +79,7 @@
                     </div>
 
                     <template x-for="project in projects" :key="project.id">
-                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-blue-500/50 p-5 rounded-2xl cursor-pointer transition shadow-sm hover:shadow-md flex flex-col justify-between min-h-[180px]">
+                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-blue-500/50 p-5 rounded-2xl cursor-pointer transition shadow-sm hover:shadow-md flex flex-col justify-between min-h-[160px]">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
                                     <span class="text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full"
@@ -103,24 +103,22 @@
                     </template>
                 </div>
 
-                <!-- SECTION BASSE : SYNCHRONISATION & SAUVEGARDE (EXPORT / IMPORT AVEC SVG PRO) -->
-                <div class="mt-12 bg-gray-900 border border-gray-800 p-6 rounded-3xl shadow-xl space-y-4">
+                <!-- SECTION BASSE : SYNCHRONISATION & SAUVEGARDE -->
+                <div class="mt-8 bg-gray-900 border border-gray-800 p-6 rounded-3xl shadow-xl space-y-4">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-lg flex-shrink-0">
                             🔄
                         </div>
                         <div>
                             <h3 class="font-bold text-base text-white">Synchronisation & Sauvegarde</h3>
-                            <p class="text-xs text-gray-400">Exportez ou importez vos données JSON pour synchroniser l'application entre votre navigateur et votre écran d'accueil.</p>
+                            <p class="text-xs text-gray-400">Exportez ou importez vos données JSON pour synchroniser vos projets sur tous vos appareils.</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                        <!-- Bouton Exporter avec SVG -->
                         <button @click="exportData()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50 shadow-sm">
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                             <span>Exporter les données (JSON)</span>
                         </button>
-                        <!-- Bouton Importer avec SVG -->
                         <label class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50 shadow-sm">
                             <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             <span>Importer une sauvegarde</span>
@@ -135,7 +133,7 @@
         <!-- 2. VUE DÉTAILLÉE DU PROJET -->
         <template x-if="currentView === 'projectDetail' && currentProject">
             <div class="space-y-6">
-                <!-- Fil d'Ariane Amélioré -->
+                <!-- Fil d'Ariane -->
                 <div class="bg-gray-900 border border-gray-800 px-4 py-3 rounded-2xl flex items-center space-x-2 text-xs sm:text-sm text-gray-400 overflow-x-auto shadow-sm">
                     <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
                     <span class="text-gray-600">/</span>
@@ -194,7 +192,7 @@
         <!-- 3. ESPACE DE TRAVAIL DE L'ÉPISODE -->
         <template x-if="currentView === 'episodeDetail' && currentEpisode">
             <div class="space-y-6">
-                <!-- Fil d'Ariane Amélioré -->
+                <!-- Fil d'Ariane -->
                 <div class="bg-gray-900 border border-gray-800 px-4 py-3 rounded-2xl flex items-center space-x-2 text-xs sm:text-sm text-gray-400 overflow-x-auto shadow-sm">
                     <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
                     <span class="text-gray-600">/</span>
@@ -263,7 +261,58 @@
                 <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 shadow-lg">
                     <h3 class="font-bold text-lg">📱 Formats Réseaux Sociaux</h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        
+                        <!-- YouTube -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-red-400">YouTube (16:9)</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'youtube')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'youtube')" :key="media.id">
+                                    <div class="bg-gray-900 p-3 rounded-xl flex flex-col space-y-2 text-xs">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-medium text-white truncate max-w-[170px]" x-text="media.name"></span>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300 text-sm p-1">✕</button>
+                                        </div>
+                                        <div class="flex space-x-2 pt-1 border-t border-gray-800">
+                                            <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 border border-blue-800/50 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
+                                            <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center font-medium">Télécharger</a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- YouTube Shorts -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-red-500">YouTube Shorts (9:16)</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'youtube_shorts')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'youtube_shorts')" :key="media.id">
+                                    <div class="bg-gray-900 p-3 rounded-xl flex flex-col space-y-2 text-xs">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-medium text-white truncate max-w-[170px]" x-text="media.name"></span>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300 text-sm p-1">✕</button>
+                                        </div>
+                                        <div class="flex space-x-2 pt-1 border-t border-gray-800">
+                                            <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 border border-blue-800/50 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
+                                            <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center font-medium">Télécharger</a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
                         <!-- TikTok -->
                         <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
                             <div class="flex justify-between items-center">
@@ -292,7 +341,7 @@
                         <!-- Instagram -->
                         <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
                             <div class="flex justify-between items-center">
-                                <span class="font-bold text-sm text-purple-400">Instagram</span>
+                                <span class="font-bold text-sm text-purple-400">Instagram (9:16 / 4:5)</span>
                                 <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
                                     + Ajouter
                                     <input type="file" class="hidden" @change="addMedia($event, 'instagram')">
@@ -315,9 +364,9 @@
                         </div>
 
                         <!-- Facebook -->
-                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3 sm:col-span-2 lg:col-span-1">
                             <div class="flex justify-between items-center">
-                                <span class="font-bold text-sm text-blue-400">Facebook</span>
+                                <span class="font-bold text-sm text-blue-400">Facebook (16:9 / 9:16)</span>
                                 <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
                                     + Ajouter
                                     <input type="file" class="hidden" @change="addMedia($event, 'facebook')">
@@ -338,13 +387,14 @@
                                 </template>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </template>
     </main>
 
-    <!-- MODALE : LECTEUR / VISIONNEUSE AMÉLIORÉE -->
+    <!-- MODALE : LECTEUR / VISIONNEUSE INTELLIGENTE -->
     <template x-if="showPreviewModal && previewMediaItem">
         <div class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 z-50">
             <div class="bg-gray-900 border border-gray-800 rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
@@ -360,9 +410,13 @@
                     <button @click="closePreview()" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-full flex items-center justify-center transition text-lg flex-shrink-0">✕</button>
                 </div>
                 
-                <div class="flex-1 flex items-center justify-center bg-black/70 p-6 min-h-[300px] max-h-[65vh] overflow-auto">
+                <!-- Conteneur vidéo adapté selon le format (Paysage 16:9 vs Portrait 9:16) -->
+                <div class="flex-1 flex items-center justify-center bg-black/90 p-4 min-h-[300px] max-h-[65vh] overflow-hidden">
                     <template x-if="previewMediaItem.type === 'video'">
-                        <video :src="previewMediaItem.url" controls autoplay class="max-w-full max-h-[60vh] rounded-2xl shadow-2xl border border-gray-800"></video>
+                        <video :src="previewMediaItem.url" controls autoplay 
+                               class="rounded-2xl shadow-2xl border border-gray-800 bg-black object-contain"
+                               :class="['youtube', 'facebook'].includes(previewMediaItem.format) ? 'w-full aspect-video' : 'max-h-[62vh] w-auto'">
+                        </video>
                     </template>
                     <template x-if="previewMediaItem.type === 'audio'">
                         <div class="w-full max-w-md bg-gray-950 border border-gray-800 p-8 rounded-2xl flex flex-col items-center space-y-6 shadow-xl">
