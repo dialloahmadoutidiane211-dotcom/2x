@@ -37,7 +37,7 @@
     </div>
 
     <!-- HEADER / NAVIGATION -->
-    <header class="bg-gray-900/80 backdrop-blur-md border-b border-gray-800/80 p-4 sticky top-0 z-40">
+    <header class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800/80 p-4 sticky top-0 z-40 shadow-md">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent cursor-pointer flex items-center space-x-2" @click="currentView = 'dashboard'">
                 <span>🎬</span><span>VMax</span>
@@ -55,8 +55,8 @@
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+    <!-- MAIN CONTAINER (Avec padding-top ajusté pour éviter toute coupure) -->
+    <main class="max-w-6xl mx-auto p-4 md:p-6 pt-6 md:pt-8 space-y-6">
 
         <!-- 1. TABLEAU DE BORD (DASHBOARD) -->
         <template x-if="currentView === 'dashboard'">
@@ -68,7 +68,7 @@
 
                 <!-- Grille des Projets + Carte "Nouveau Projet" -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div @click="showNewProjectModal = true" class="bg-gradient-to-br from-blue-950/30 via-gray-900 to-purple-950/30 border border-blue-500/30 hover:border-blue-500/70 p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-xl flex flex-col items-center justify-center text-center space-y-3 min-h-[160px] group">
+                    <div @click="showNewProjectModal = true" class="bg-gradient-to-br from-blue-950/40 via-gray-900 to-purple-950/40 border border-blue-500/40 hover:border-blue-500/80 p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-xl flex flex-col items-center justify-center text-center space-y-3 min-h-[160px] group">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
                             +
                         </div>
@@ -394,29 +394,31 @@
         </template>
     </main>
 
-    <!-- MODALE : LECTEUR / VISIONNEUSE INTELLIGENTE -->
+    <!-- MODALE : LECTEUR / VISIONNEUSE FORÇANT LES RATIOS DU RÉSEAU -->
     <template x-if="showPreviewModal && previewMediaItem">
-        <div class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="fixed inset-0 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
             <div class="bg-gray-900 border border-gray-800 rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                 
-                <div class="flex justify-between items-center px-6 py-4 bg-gray-950/80 border-b border-gray-800">
+                <div class="flex justify-between items-center px-6 py-4 bg-gray-950/90 border-b border-gray-800">
                     <div class="flex items-center space-x-3 overflow-hidden pr-2">
                         <span class="text-2xl flex-shrink-0" x-text="mediaIcon(previewMediaItem.type)"></span>
                         <div class="overflow-hidden">
                             <h3 class="font-bold text-base text-white truncate" x-text="previewMediaItem.name"></h3>
-                            <span class="text-xs text-gray-400 uppercase tracking-wider" x-text="previewMediaItem.type"></span>
+                            <span class="text-xs text-gray-400 uppercase tracking-wider" x-text="'Format : ' + previewMediaItem.format"></span>
                         </div>
                     </div>
                     <button @click="closePreview()" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-full flex items-center justify-center transition text-lg flex-shrink-0">✕</button>
                 </div>
                 
-                <!-- Conteneur vidéo adapté selon le format (Paysage 16:9 vs Portrait 9:16) -->
-                <div class="flex-1 flex items-center justify-center bg-black/90 p-4 min-h-[300px] max-h-[65vh] overflow-hidden">
+                <!-- Conteneur vidéo avec recadrage automatique forcé au ratio du réseau social -->
+                <div class="flex-1 flex items-center justify-center bg-black p-4 min-h-[320px] max-h-[68vh] overflow-hidden">
                     <template x-if="previewMediaItem.type === 'video'">
-                        <video :src="previewMediaItem.url" controls autoplay 
-                               class="rounded-2xl shadow-2xl border border-gray-800 bg-black object-contain"
-                               :class="['youtube', 'facebook'].includes(previewMediaItem.format) ? 'w-full aspect-video' : 'max-h-[62vh] w-auto'">
-                        </video>
+                        <div class="relative flex items-center justify-center w-full h-full">
+                            <video :src="previewMediaItem.url" controls autoplay playsinline
+                                   class="rounded-xl shadow-2xl border border-gray-800 bg-black object-cover"
+                                   :class="['youtube', 'facebook'].includes(previewMediaItem.format) ? 'w-full aspect-video' : 'h-[60vh] aspect-[9/16]'">
+                            </video>
+                        </div>
                     </template>
                     <template x-if="previewMediaItem.type === 'audio'">
                         <div class="w-full max-w-md bg-gray-950 border border-gray-800 p-8 rounded-2xl flex flex-col items-center space-y-6 shadow-xl">
@@ -431,8 +433,8 @@
                     </template>
                 </div>
 
-                <div class="flex justify-between items-center px-6 py-4 bg-gray-950/80 border-t border-gray-800">
-                    <span class="text-xs text-gray-500 hidden sm:inline">Lecture sécurisée VMax</span>
+                <div class="flex justify-between items-center px-6 py-4 bg-gray-950/90 border-t border-gray-800">
+                    <span class="text-xs text-gray-500 hidden sm:inline">Recadrage automatique VMax</span>
                     <div class="flex space-x-3 w-full sm:w-auto justify-end">
                         <a :href="previewMediaItem.url" :download="previewMediaItem.name" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition shadow-lg shadow-blue-600/20 flex items-center space-x-2">
                             <span>Télécharger</span>
