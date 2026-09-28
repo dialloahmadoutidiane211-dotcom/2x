@@ -57,7 +57,7 @@
         <template x-if="currentView === 'dashboard'">
             <div class="space-y-6">
                 <!-- Barre d'outils Sync / Export / Import -->
-                <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-lg">
                     <div>
                         <h2 class="text-xl font-bold">Mes Projets Vidéo</h2>
                         <p class="text-xs text-gray-400">Gérez vos séries, mini-séries, courts et longs métrages.</p>
@@ -120,7 +120,7 @@
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[200px]" x-text="currentProject.title"></span>
                 </div>
 
-                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl">
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-lg">
                     <h2 class="text-2xl font-bold mb-1 truncate" x-text="currentProject.title"></h2>
                     <p class="text-sm text-gray-400 capitalize" x-text="'Type : ' + formatType(currentProject.type)"></p>
                 </div>
@@ -136,7 +136,7 @@
 
                         <div class="space-y-4">
                             <template x-for="season in currentProject.seasons" :key="season.id">
-                                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-4">
+                                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-4 shadow-md">
                                     <div class="flex justify-between items-center">
                                         <h4 class="font-bold text-lg text-blue-400" x-text="'Saison ' + season.seasonNumber"></h4>
                                         <button @click="addEpisode(currentProject.id, season.id)" class="text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30 px-3.5 py-1.5 rounded-xl hover:bg-blue-600/30 transition">
@@ -147,11 +147,11 @@
                                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                         <template x-for="episode in season.episodes" :key="episode.id">
                                             <div @click="openEpisode(episode)" class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-4 rounded-xl cursor-pointer transition flex justify-between items-center">
-                                                <div>
+                                                <div class="overflow-hidden pr-2">
                                                     <span class="text-xs text-gray-500 block" x-text="'Épisode ' + episode.episodeNumber"></span>
-                                                    <span class="font-semibold text-white truncate max-w-[150px]" x-text="episode.title"></span>
+                                                    <span class="font-semibold text-white block truncate max-w-[150px]" x-text="episode.title"></span>
                                                 </div>
-                                                <span class="text-gray-600">➔</span>
+                                                <span class="text-gray-600 flex-shrink-0">➔</span>
                                             </div>
                                         </template>
                                     </div>
@@ -176,13 +176,13 @@
                 <div class="bg-gray-900 border border-gray-800 px-4 py-3 rounded-2xl flex items-center space-x-2 text-xs sm:text-sm text-gray-400 overflow-x-auto shadow-sm">
                     <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
                     <span class="text-gray-600">/</span>
-                    <span class="cursor-pointer hover:text-white whitespace-nowrap truncate max-w-[120px]" @click="currentView = 'projectDetail'" x-text="currentProject.title"></span>
+                    <span class="cursor-pointer hover:text-white whitespace-nowrap truncate max-w-[100px]" @click="currentView = 'projectDetail'" x-text="currentProject.title"></span>
                     <span class="text-gray-600">/</span>
-                    <span class="text-white font-medium whitespace-nowrap truncate max-w-[120px]" x-text="currentEpisode.title"></span>
+                    <span class="text-white font-medium whitespace-nowrap truncate max-w-[100px]" x-text="currentEpisode.title"></span>
                 </div>
 
-                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex justify-between items-center">
-                    <div>
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex justify-between items-center shadow-lg">
+                    <div class="overflow-hidden pr-2">
                         <h2 class="text-2xl font-bold truncate max-w-[280px] sm:max-w-xl" x-text="currentEpisode.title"></h2>
                         <p class="text-sm text-gray-400">Espace de travail : Scripts, Prompts, Rushes et Formats.</p>
                     </div>
@@ -190,7 +190,7 @@
 
                 <!-- SECTION A : ESPACE TEXTE -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
                             <label class="font-bold text-sm text-gray-300">📝 Espace Script</label>
                             <button @click="copyText(currentEpisode.script, 'script')" class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
@@ -198,7 +198,7 @@
                         <textarea x-model="currentEpisode.script" @input="saveData()" rows="10" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
                     </div>
 
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
                             <label class="font-bold text-sm text-gray-300">🤖 Espace Prompts IA</label>
                             <button @click="copyText(currentEpisode.prompts, 'prompts')" class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
@@ -208,7 +208,7 @@
                 </div>
 
                 <!-- SECTION B : ESPACE MÉDIAS ORIGINAUX -->
-                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4">
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 shadow-lg">
                     <div class="flex justify-between items-center">
                         <h3 class="font-bold text-lg">📁 Fichiers Originaux</h3>
                         <label class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-4 py-2.5 rounded-xl cursor-pointer transition shadow-md shadow-blue-600/20">
@@ -222,7 +222,7 @@
                             <div class="bg-gray-950 border border-gray-800 p-3.5 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm">
                                 <div class="flex items-center space-x-2.5 overflow-hidden w-full sm:w-auto">
                                     <span class="text-lg flex-shrink-0" x-text="mediaIcon(media.type)"></span>
-                                    <span class="font-medium text-white truncate" x-text="media.name"></span>
+                                    <span class="font-medium text-white truncate max-w-[200px] sm:max-w-xs" x-text="media.name"></span>
                                 </div>
                                 <div class="flex items-center space-x-2 w-full sm:w-auto justify-end flex-wrap gap-1.5">
                                     <button @click="previewMedia(media)" class="text-blue-300 hover:text-white bg-blue-950 hover:bg-blue-900 border border-blue-800/50 px-3 py-1.5 rounded-lg text-xs font-medium transition">Lire ▶️</button>
@@ -238,7 +238,7 @@
                 </div>
 
                 <!-- SECTION C : FORMATS RÉSEAUX SOCIAUX -->
-                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4">
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 shadow-lg">
                     <h3 class="font-bold text-lg">📱 Formats Réseaux Sociaux</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -328,14 +328,14 @@
             <div class="bg-gray-900 border border-gray-800 rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                 
                 <div class="flex justify-between items-center px-6 py-4 bg-gray-950/80 border-b border-gray-800">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-2xl" x-text="mediaIcon(previewMediaItem.type)"></span>
-                        <div>
-                            <h3 class="font-bold text-base text-white truncate max-w-[240px] sm:max-w-md" x-text="previewMediaItem.name"></h3>
+                    <div class="flex items-center space-x-3 overflow-hidden pr-2">
+                        <span class="text-2xl flex-shrink-0" x-text="mediaIcon(previewMediaItem.type)"></span>
+                        <div class="overflow-hidden">
+                            <h3 class="font-bold text-base text-white truncate" x-text="previewMediaItem.name"></h3>
                             <span class="text-xs text-gray-400 uppercase tracking-wider" x-text="previewMediaItem.type"></span>
                         </div>
                     </div>
-                    <button @click="closePreview()" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-full flex items-center justify-center transition text-lg">✕</button>
+                    <button @click="closePreview()" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-full flex items-center justify-center transition text-lg flex-shrink-0">✕</button>
                 </div>
                 
                 <div class="flex-1 flex items-center justify-center bg-black/70 p-6 min-h-[300px] max-h-[65vh] overflow-auto">
@@ -356,8 +356,8 @@
                 </div>
 
                 <div class="flex justify-between items-center px-6 py-4 bg-gray-950/80 border-t border-gray-800">
-                    <span class="text-xs text-gray-500">Lecture sécurisée VMax</span>
-                    <div class="flex space-x-3">
+                    <span class="text-xs text-gray-500 hidden sm:inline">Lecture sécurisée VMax</span>
+                    <div class="flex space-x-3 w-full sm:w-auto justify-end">
                         <a :href="previewMediaItem.url" :download="previewMediaItem.name" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition shadow-lg shadow-blue-600/20 flex items-center space-x-2">
                             <span>Télécharger</span>
                             <span>⬇️</span>
