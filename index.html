@@ -43,6 +43,10 @@
                 <span>🎬</span><span>VMax</span>
             </h1>
             <div class="flex items-center space-x-2">
+                <!-- Bouton Actualiser instantané -->
+                <button @click="window.location.reload()" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition shadow-sm flex items-center space-x-1" title="Actualiser l'application">
+                    <span>🔄 Actualiser</span>
+                </button>
                 <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition shadow-sm">
                     Accueil / Projets
                 </button>
