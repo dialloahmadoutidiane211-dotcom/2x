@@ -18,9 +18,7 @@
          x-transition:leave-end="opacity-0 scale-105"
          class="fixed inset-0 z-50 bg-gray-950 flex flex-col items-center justify-center space-y-4">
         <div class="relative flex items-center justify-center">
-            <!-- Onde lumineuse -->
             <div class="absolute w-28 h-28 bg-blue-600/20 rounded-full animate-ping"></div>
-            <!-- Icône animée -->
             <div class="w-20 h-20 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/50 animate-bounce">
                 <span class="text-3xl">🎬</span>
             </div>
@@ -37,7 +35,7 @@
             <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent cursor-pointer" @click="currentView = 'dashboard'">
                 🎬 VideoProject Manager
             </h1>
-            <button @click="currentView = 'dashboard'" class="text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
+            <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
                 Accueil / Projets
             </button>
         </div>
@@ -49,20 +47,23 @@
         <!-- 1. TABLEAU DE BORD (DASHBOARD) -->
         <template x-if="currentView === 'dashboard'">
             <div class="space-y-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-2xl font-bold">Mes Projets Vidéo</h2>
-                        <p class="text-sm text-gray-400">Gérez vos séries, mini-séries, courts et longs métrages[span_0](start_span)[span_0](end_span).</p>
-                    </div>
-                    <button @click="showNewProjectModal = true" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-xl transition shadow-lg shadow-blue-600/20">
-                        + Nouveau Projet
-                    </button>
+                <div>
+                    <h2 class="text-2xl font-bold">Mes Projets Vidéo</h2>
+                    <p class="text-sm text-gray-400">Gérez vos séries, mini-séries, courts et longs métrages.</p>
                 </div>
 
-                <!-- Liste des Projets -->
+                <!-- Grille des Projets + Carte de Création intégrée -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div @click="showNewProjectModal = true" class="bg-gray-900/50 border-2 border-dashed border-gray-800 hover:border-blue-500/50 p-5 rounded-2xl cursor-pointer transition flex flex-col items-center justify-center text-center space-y-2 min-h-[160px] group">
+                        <div class="w-12 h-12 rounded-full bg-blue-600/20 text-blue-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                            +
+                        </div>
+                        <span class="font-bold text-gray-300 group-hover:text-white transition">Nouveau Projet</span>
+                        <span class="text-xs text-gray-500">Créer une série, mini-série ou film</span>
+                    </div>
+
                     <template x-for="project in projects" :key="project.id">
-                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-blue-500/50 p-5 rounded-2xl cursor-pointer transition shadow-sm hover:shadow-md flex flex-col justify-between">
+                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-blue-500/50 p-5 rounded-2xl cursor-pointer transition shadow-sm hover:shadow-md flex flex-col justify-between min-h-[160px]">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
                                     <span class="text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full"
@@ -85,20 +86,12 @@
                         </div>
                     </template>
                 </div>
-
-                <template x-if="projects.length === 0">
-                    <div class="text-center py-20 bg-gray-900/50 border border-dashed border-gray-800 rounded-2xl">
-                        <p class="text-gray-400 mb-2">Aucun projet pour le moment.</p>
-                        <button @click="showNewProjectModal = true" class="text-blue-400 font-medium hover:underline">Créer votre premier projet</button>
-                    </div>
-                </template>
             </div>
         </template>
 
         <!-- 2. VUE DÉTAILLÉE DU PROJET -->
         <template x-if="currentView === 'projectDetail' && currentProject">
             <div class="space-y-6">
-                <!-- Fil d'Ariane -->
                 <div class="flex items-center space-x-2 text-sm text-gray-400">
                     <span class="cursor-pointer hover:text-white" @click="currentView = 'dashboard'">Accueil</span>
                     <span>/</span>
@@ -110,7 +103,6 @@
                     <p class="text-sm text-gray-400 capitalize" x-text="'Type : ' + formatType(currentProject.type)"></p>
                 </div>
 
-                <!-- Si c'est une Série ou Mini-série -->
                 <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
                     <div class="space-y-6">
                         <div class="flex justify-between items-center">
@@ -147,7 +139,6 @@
                     </div>
                 </template>
 
-                <!-- Si c'est un Court ou Long-métrage -->
                 <template x-if="currentProject.type === 'court_metrage' || currentProject.type === 'long_metrage'">
                     <div>
                         <div x-init="openMovieWorkspace(currentProject)"></div>
@@ -159,7 +150,6 @@
         <!-- 3. ESPACE DE TRAVAIL DE L'ÉPISODE -->
         <template x-if="currentView === 'episodeDetail' && currentEpisode">
             <div class="space-y-6">
-                <!-- Fil d'Ariane -->
                 <div class="flex items-center space-x-2 text-sm text-gray-400">
                     <span class="cursor-pointer hover:text-white" @click="currentView = 'dashboard'">Accueil</span>
                     <span>/</span>
@@ -171,13 +161,12 @@
                 <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex justify-between items-center">
                     <div>
                         <h2 class="text-2xl font-bold" x-text="currentEpisode.title"></h2>
-                        <p class="text-sm text-gray-400">Espace de travail : Scripts, Prompts, Rushes et Formats[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span).</p>
+                        <p class="text-sm text-gray-400">Espace de travail : Scripts, Prompts, Rushes et Formats.</p>
                     </div>
                 </div>
 
                 <!-- SECTION A : ESPACE TEXTE -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Script -->
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3">
                         <div class="flex justify-between items-center">
                             <label class="font-bold text-sm text-gray-300">📝 Espace Script</label>
@@ -186,7 +175,6 @@
                         <textarea x-model="currentEpisode.script" @input="saveData()" rows="10" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
                     </div>
 
-                    <!-- Prompts -->
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3">
                         <div class="flex justify-between items-center">
                             <label class="font-bold text-sm text-gray-300">🤖 Espace Prompts IA</label>
@@ -213,7 +201,8 @@
                                     <span x-text="mediaIcon(media.type)"></span>
                                     <span class="font-medium" x-text="media.name"></span>
                                 </div>
-                                <div class="space-x-3">
+                                <div class="space-x-3 flex items-center">
+                                    <button @click="previewMedia(media)" class="text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg text-xs transition">Aperçu 👁️</button>
                                     <a :href="media.url" :download="media.name" class="text-blue-400 hover:underline">Télécharger</a>
                                     <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300">Supprimer</button>
                                 </div>
@@ -242,10 +231,11 @@
                             <div class="space-y-2">
                                 <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'tiktok')" :key="media.id">
                                     <div class="bg-gray-900 p-2.5 rounded-lg flex justify-between items-center text-xs">
-                                        <span class="truncate w-36" x-text="media.name"></span>
-                                        <div class="space-x-2">
-                                            <a :href="media.url" :download="media.name" class="text-blue-400">⬇️</a>
-                                            <button @click="deleteMedia(media.id)" class="text-red-400">✖</button>
+                                        <span class="truncate w-28" x-text="media.name"></span>
+                                        <div class="space-x-1.5 flex items-center">
+                                            <button @click="previewMedia(media)" class="text-gray-300 hover:text-white bg-gray-800 px-2 py-0.5 rounded text-[10px]" title="Aperçu">👁️</button>
+                                            <a :href="media.url" :download="media.name" class="text-blue-400" title="Télécharger">⬇️</a>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400" title="Supprimer">✖</button>
                                         </div>
                                     </div>
                                 </template>
@@ -264,10 +254,11 @@
                             <div class="space-y-2">
                                 <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'instagram')" :key="media.id">
                                     <div class="bg-gray-900 p-2.5 rounded-lg flex justify-between items-center text-xs">
-                                        <span class="truncate w-36" x-text="media.name"></span>
-                                        <div class="space-x-2">
-                                            <a :href="media.url" :download="media.name" class="text-blue-400">⬇️</a>
-                                            <button @click="deleteMedia(media.id)" class="text-red-400">✖</button>
+                                        <span class="truncate w-28" x-text="media.name"></span>
+                                        <div class="space-x-1.5 flex items-center">
+                                            <button @click="previewMedia(media)" class="text-gray-300 hover:text-white bg-gray-800 px-2 py-0.5 rounded text-[10px]" title="Aperçu">👁️</button>
+                                            <a :href="media.url" :download="media.name" class="text-blue-400" title="Télécharger">⬇️</a>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400" title="Supprimer">✖</button>
                                         </div>
                                     </div>
                                 </template>
@@ -286,10 +277,11 @@
                             <div class="space-y-2">
                                 <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'facebook')" :key="media.id">
                                     <div class="bg-gray-900 p-2.5 rounded-lg flex justify-between items-center text-xs">
-                                        <span class="truncate w-36" x-text="media.name"></span>
-                                        <div class="space-x-2">
-                                            <a :href="media.url" :download="media.name" class="text-blue-400">⬇️</a>
-                                            <button @click="deleteMedia(media.id)" class="text-red-400">✖</button>
+                                        <span class="truncate w-28" x-text="media.name"></span>
+                                        <div class="space-x-1.5 flex items-center">
+                                            <button @click="previewMedia(media)" class="text-gray-300 hover:text-white bg-gray-800 px-2 py-0.5 rounded text-[10px]" title="Aperçu">👁️</button>
+                                            <a :href="media.url" :download="media.name" class="text-blue-400" title="Télécharger">⬇️</a>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400" title="Supprimer">✖</button>
                                         </div>
                                     </div>
                                 </template>
@@ -300,6 +292,41 @@
             </div>
         </template>
     </main>
+
+    <!-- MODALE : LECTEUR / APERÇU DES MÉDIAS -->
+    <template x-if="showPreviewModal && previewMediaItem">
+        <div class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+            <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl w-full max-w-2xl space-y-4 shadow-2xl relative">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                    <h3 class="font-bold text-lg truncate text-white" x-text="previewMediaItem.name"></h3>
+                    <button @click="closePreview()" class="text-gray-400 hover:text-white text-xl">✕</button>
+                </div>
+                
+                <div class="flex justify-center items-center bg-black/60 rounded-xl p-4 min-h-[250px]">
+                    <!-- Lecteur Vidéo -->
+                    <template x-if="previewMediaItem.type === 'video'">
+                        <video :src="previewMediaItem.url" controls autoplay class="w-full max-h-[60vh] rounded-lg"></video>
+                    </template>
+                    <!-- Lecteur Audio -->
+                    <template x-if="previewMediaItem.type === 'audio'">
+                        <div class="w-full flex flex-col items-center space-y-4 py-8">
+                            <div class="text-4xl animate-pulse">🎵</div>
+                            <audio :src="previewMediaItem.url" controls autoplay class="w-full"></audio>
+                        </div>
+                    </template>
+                    <!-- Visionneuse Image -->
+                    <template x-if="previewMediaItem.type === 'image'">
+                        <img :src="previewMediaItem.url" class="max-h-[60vh] object-contain rounded-lg">
+                    </template>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-2">
+                    <a :href="previewMediaItem.url" :download="previewMediaItem.name" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-500 rounded-xl font-medium transition text-white">Télécharger</a>
+                    <button @click="closePreview()" class="px-4 py-2 text-sm bg-gray-800 hover:bg-gray-700 rounded-xl transition text-white">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </template>
 
     <!-- MODALE : CRÉATION DE PROJET -->
     <template x-if="showNewProjectModal">
@@ -344,9 +371,10 @@
                 newProjectType: 'serie',
                 copiedScript: false,
                 copiedPrompts: false,
+                showPreviewModal: false,
+                previewMediaItem: null,
 
                 initApp() {
-                    // Animation d'allumage pendant 1.5 seconde
                     setTimeout(() => {
                         this.isLoading = false;
                     }, 1500);
@@ -515,6 +543,16 @@
                 deleteMedia(mediaId) {
                     this.currentEpisode.mediaAssets = this.currentEpisode.mediaAssets.filter(m => m.id !== mediaId);
                     this.saveData();
+                },
+
+                previewMedia(media) {
+                    this.previewMediaItem = media;
+                    this.showPreviewModal = true;
+                },
+
+                closePreview() {
+                    this.showPreviewModal = false;
+                    this.previewMediaItem = null;
                 },
 
                 mediaIcon(type) {
