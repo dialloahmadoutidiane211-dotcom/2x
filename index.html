@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionnaire de Projets Vidéo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js pour la réactivité -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans" x-data="appData()" x-init="initApp()">
+
+    <!-- ANIMATION D'ALLUMAGE (SPLASH SCREEN CINÉMATIQUE) -->
+    <div x-show="isLoading" 
+         x-transition:leave="transition ease-out duration-700"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-105"
+         class="fixed inset-0 z-50 bg-gray-950 flex flex-col items-center justify-center space-y-4">
+        <div class="relative flex items-center justify-center">
+            <!-- Onde lumineuse -->
+            <div class="absolute w-28 h-28 bg-blue-600/20 rounded-full animate-ping"></div>
+            <!-- Icône animée -->
+            <div class="w-20 h-20 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/50 animate-bounce">
+                <span class="text-3xl">🎬</span>
+            </div>
+        </div>
+        <h2 class="text-xl font-bold tracking-widest uppercase bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent animate-pulse">
+            VideoProject Studio
+        </h2>
+        <p class="text-xs text-gray-500 tracking-wider">Moteur, ça tourne...</p>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-gray-900 border-b border-gray-800 p-4 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent cursor-pointer" @click="currentView = 'dashboard'">
+                🎬 VideoProject Manager
+            </h1>
+            <button @click="currentView = 'dashboard'" class="text-sm bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
+                Accueil / Projets
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-6xl mx-auto p-4 md:p-6">
+
+        <!-- 1. TABLEAU DE BORD (DASHBOARD) -->
+        <template x-if="currentView === 'dashboard'">
+            <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold">Mes Projets Vidéo</h2>
+                        <p class="text-sm text-gray-400">Gérez vos séries, mini-séries, courts et longs métrages[span_0](start_span)[span_0](end_span).</p>
+                    </div>
+                    <button @click="showNewProjectModal = true" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-xl transition shadow-lg shadow-blue-600/20">
+                        + Nouveau Projet
+                    </button>
+                </div>
+
+                <!-- Liste des Projets -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <template x-for="project in projects" :key="project.id">
+                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-blue-500/50 p-5 rounded-2xl cursor-pointer transition shadow-sm hover:shadow-md flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <span class="text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full"
+                                        :class="{
+                                            'bg-purple-900/50 text-purple-300 border border-purple-700/50': project.type === 'serie',
+                                            'bg-blue-900/50 text-blue-300 border border-blue-700/50': project.type === 'mini_serie',
+                                            'bg-green-900/50 text-green-300 border border-green-700/50': project.type === 'court_metrage',
+                                            'bg-amber-900/50 text-amber-300 border border-amber-700/50': project.type === 'long_metrage'
+                                        }"
+                                        x-text="formatType(project.type)">
+                                    </span>
+                                    <button @click.stop="deleteProject(project.id)" class="text-gray-500 hover:text-red-400 text-sm">🗑️</button>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-1" x-text="project.title"></h3>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-800 text-xs text-gray-400 flex justify-between items-center">
+                                <span>Ouvrir l'espace</span>
+                                <span>➔</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <template x-if="projects.length === 0">
+                    <div class="text-center py-20 bg-gray-900/50 border border-dashed border-gray-800 rounded-2xl">
+                        <p class="text-gray-400 mb-2">Aucun projet pour le moment.</p>
+                        <button @click="showNewProjectModal = true" class="text-blue-400 font-medium hover:underline">Créer votre premier projet</button>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- 2. VUE DÉTAILLÉE DU PROJET -->
+        <template x-if="currentView === 'projectDetail' && currentProject">
+            <div class="space-y-6">
+                <!-- Fil d'Ariane -->
+                <div class="flex items-center space-x-2 text-sm text-gray-400">
+                    <span class="cursor-pointer hover:text-white" @click="currentView = 'dashboard'">Accueil</span>
+                    <span>/</span>
+                    <span class="text-white font-medium" x-text="currentProject.title"></span>
+                </div>
+
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl">
+                    <h2 class="text-2xl font-bold mb-1" x-text="currentProject.title"></h2>
+                    <p class="text-sm text-gray-400 capitalize" x-text="'Type : ' + formatType(currentProject.type)"></p>
+                </div>
+
+                <!-- Si c'est une Série ou Mini-série -->
+                <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-bold">Saisons et Épisodes</h3>
+                            <button @click="addSeason(currentProject.id)" class="bg-gray-800 hover:bg-gray-700 text-sm px-3 py-1.5 rounded-xl transition">
+                                + Ajouter une saison
+                            </button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <template x-for="season in currentProject.seasons" :key="season.id">
+                                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <h4 class="font-bold text-lg text-blue-400" x-text="'Saison ' + season.seasonNumber"></h4>
+                                        <button @click="addEpisode(currentProject.id, season.id)" class="text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-lg hover:bg-blue-600/30 transition">
+                                            + Ajouter un épisode
+                                        </button>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                        <template x-for="episode in season.episodes" :key="episode.id">
+                                            <div @click="openEpisode(episode)" class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-4 rounded-xl cursor-pointer transition flex justify-between items-center">
+                                                <div>
+                                                    <span class="text-xs text-gray-500 block" x-text="'Épisode ' + episode.episodeNumber"></span>
+                                                    <span class="font-semibold text-white" x-text="episode.title"></span>
+                                                </div>
+                                                <span class="text-gray-600">➔</span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Si c'est un Court ou Long-métrage -->
+                <template x-if="currentProject.type === 'court_metrage' || currentProject.type === 'long_metrage'">
+                    <div>
+                        <div x-init="openMovieWorkspace(currentProject)"></div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- 3. ESPACE DE TRAVAIL DE L'ÉPISODE -->
+        <template x-if="currentView === 'episodeDetail' && currentEpisode">
+            <div class="space-y-6">
+                <!-- Fil d'Ariane -->
+                <div class="flex items-center space-x-2 text-sm text-gray-400">
+                    <span class="cursor-pointer hover:text-white" @click="currentView = 'dashboard'">Accueil</span>
+                    <span>/</span>
+                    <span class="cursor-pointer hover:text-white" @click="currentView = 'projectDetail'" x-text="currentProject.title"></span>
+                    <span>/</span>
+                    <span class="text-white font-medium" x-text="currentEpisode.title"></span>
+                </div>
+
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold" x-text="currentEpisode.title"></h2>
+                        <p class="text-sm text-gray-400">Espace de travail : Scripts, Prompts, Rushes et Formats[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span).</p>
+                    </div>
+                </div>
+
+                <!-- SECTION A : ESPACE TEXTE -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Script -->
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-sm text-gray-300">📝 Espace Script</label>
+                            <button @click="copyText(currentEpisode.script, 'script')" class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
+                        </div>
+                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="10" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+
+                    <!-- Prompts -->
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <label class="font-bold text-sm text-gray-300">🤖 Espace Prompts IA</label>
+                            <button @click="copyText(currentEpisode.prompts, 'prompts')" class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
+                        </div>
+                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="10" placeholder="Collez vos prompts IA ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+                </div>
+
+                <!-- SECTION B : ESPACE MÉDIAS ORIGINAUX -->
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg">📁 Fichiers Originaux (Rushes, Audio, Photos)</h3>
+                        <label class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-3.5 py-2 rounded-xl cursor-pointer transition">
+                            + Ajouter un fichier
+                            <input type="file" class="hidden" @change="addMedia($event, 'original')">
+                        </label>
+                    </div>
+
+                    <div class="space-y-2">
+                        <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'original')" :key="media.id">
+                            <div class="bg-gray-950 border border-gray-800 p-3 rounded-xl flex justify-between items-center text-sm">
+                                <div class="flex items-center space-x-2">
+                                    <span x-text="mediaIcon(media.type)"></span>
+                                    <span class="font-medium" x-text="media.name"></span>
+                                </div>
+                                <div class="space-x-3">
+                                    <a :href="media.url" :download="media.name" class="text-blue-400 hover:underline">Télécharger</a>
+                                    <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300">Supprimer</button>
+                                </div>
+                            </div>
+                        </template>
+                        <template x-if="currentEpisode.mediaAssets.filter(m => m.format === 'original').length === 0">
+                            <p class="text-gray-500 text-sm py-2">Aucun fichier original enregistré.</p>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- SECTION C : FORMATS RÉSEAUX SOCIAUX -->
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4">
+                    <h3 class="font-bold text-lg">📱 Formats Réseaux Sociaux</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- TikTok -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-pink-400">TikTok (9:16)</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'tiktok')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'tiktok')" :key="media.id">
+                                    <div class="bg-gray-900 p-2.5 rounded-lg flex justify-between items-center text-xs">
+                                        <span class="truncate w-36" x-text="media.name"></span>
+                                        <div class="space-x-2">
+                                            <a :href="media.url" :download="media.name" class="text-blue-400">⬇️</a>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400">✖</button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Instagram -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-purple-400">Instagram</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'instagram')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'instagram')" :key="media.id">
+                                    <div class="bg-gray-900 p-2.5 rounded-lg flex justify-between items-center text-xs">
+                                        <span class="truncate w-36" x-text="media.name"></span>
+                                        <div class="space-x-2">
+                                            <a :href="media.url" :download="media.name" class="text-blue-400">⬇️</a>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400">✖</button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Facebook -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-blue-400">Facebook</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'facebook')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'facebook')" :key="media.id">
+                                    <div class="bg-gray-900 p-2.5 rounded-lg flex justify-between items-center text-xs">
+                                        <span class="truncate w-36" x-text="media.name"></span>
+                                        <div class="space-x-2">
+                                            <a :href="media.url" :download="media.name" class="text-blue-400">⬇️</a>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400">✖</button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </main>
+
+    <!-- MODALE : CRÉATION DE PROJET -->
+    <template x-if="showNewProjectModal">
+        <div class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+            <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl w-full max-w-md space-y-4 shadow-2xl">
+                <h3 class="text-xl font-bold">Nouveau Projet Vidéo</h3>
+                
+                <div class="space-y-1">
+                    <label class="text-xs text-gray-400">Titre du projet</label>
+                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Super Projet" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-xs text-gray-400">Type de projet</label>
+                    <select x-model="newProjectType" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500">
+                        <option value="serie">Série entière</option>
+                        <option value="mini_serie">Mini-série</option>
+                        <option value="court_metrage">Court-métrage</option>
+                        <option value="long_metrage">Long-métrage</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button @click="showNewProjectModal = false" class="px-4 py-2 text-sm bg-gray-800 hover:bg-gray-700 rounded-xl transition">Annuler</button>
+                    <button @click="createProject()" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-500 rounded-xl font-medium transition">Créer</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- LOGIQUE JAVASCRIPT (ALPINE.JS) -->
+    <script>
+        function appData() {
+            return {
+                isLoading: true,
+                currentView: 'dashboard',
+                projects: JSON.parse(localStorage.getItem('video_projects') || '[]'),
+                currentProject: null,
+                currentEpisode: null,
+                showNewProjectModal: false,
+                newProjectTitle: '',
+                newProjectType: 'serie',
+                copiedScript: false,
+                copiedPrompts: false,
+
+                initApp() {
+                    // Animation d'allumage pendant 1.5 seconde
+                    setTimeout(() => {
+                        this.isLoading = false;
+                    }, 1500);
+                },
+
+                saveData() {
+                    localStorage.setItem('video_projects', JSON.stringify(this.projects));
+                },
+
+                formatType(type) {
+                    const maps = {
+                        'serie': 'Série entière',
+                        'mini_serie': 'Mini-série',
+                        'court_metrage': 'Court-métrage',
+                        'long_metrage': 'Long-métrage'
+                    };
+                    return maps[type] || type;
+                },
+
+                createProject() {
+                    if (!this.newProjectTitle.trim()) return;
+                    
+                    const newProj = {
+                        id: Date.now().toString(),
+                        title: this.newProjectTitle,
+                        type: this.newProjectType,
+                        seasons: []
+                    };
+
+                    if (this.newProjectType === 'serie' || this.newProjectType === 'mini_serie') {
+                        newProj.seasons.push({
+                            id: 's_' + Date.now(),
+                            seasonNumber: 1,
+                            episodes: [
+                                {
+                                    id: 'e_' + Date.now(),
+                                    episodeNumber: 1,
+                                    title: 'Épisode 1',
+                                    script: '',
+                                    prompts: '',
+                                    mediaAssets: []
+                                }
+                            ]
+                        });
+                    } else {
+                        newProj.seasons.push({
+                            id: 's_film_' + Date.now(),
+                            seasonNumber: 1,
+                            episodes: [
+                                {
+                                    id: 'e_film_' + Date.now(),
+                                    episodeNumber: 1,
+                                    title: this.newProjectTitle,
+                                    script: '',
+                                    prompts: '',
+                                    mediaAssets: []
+                                }
+                            ]
+                        });
+                    }
+
+                    this.projects.push(newProj);
+                    this.saveData();
+                    this.newProjectTitle = '';
+                    this.showNewProjectModal = false;
+                },
+
+                deleteProject(id) {
+                    if (confirm('Voulez-vous vraiment supprimer ce projet ?')) {
+                        this.projects = this.projects.filter(p => p.id !== id);
+                        this.saveData();
+                    }
+                },
+
+                openProject(project) {
+                    this.currentProject = project;
+                    this.currentView = 'projectDetail';
+                },
+
+                openMovieWorkspace(project) {
+                    if (project.seasons[0] && project.seasons[0].episodes[0]) {
+                        this.currentEpisode = project.seasons[0].episodes[0];
+                        this.currentView = 'episodeDetail';
+                    }
+                },
+
+                addSeason(projectId) {
+                    const project = this.projects.find(p => p.id === projectId);
+                    if (project) {
+                        const nextSeasonNum = project.seasons.length + 1;
+                        project.seasons.push({
+                            id: 's_' + Date.now(),
+                            seasonNumber: nextSeasonNum,
+                            episodes: [
+                                {
+                                    id: 'e_' + Date.now(),
+                                    episodeNumber: 1,
+                                    title: 'Épisode 1',
+                                    script: '',
+                                    prompts: '',
+                                    mediaAssets: []
+                                }
+                            ]
+                        });
+                        this.saveData();
+                    }
+                },
+
+                addEpisode(projectId, seasonId) {
+                    const project = this.projects.find(p => p.id === projectId);
+                    if (project) {
+                        const season = project.seasons.find(s => s.id === seasonId);
+                        if (season) {
+                            const nextEpNum = season.episodes.length + 1;
+                            season.episodes.push({
+                                id: 'e_' + Date.now(),
+                                episodeNumber: nextEpNum,
+                                title: 'Épisode ' + nextEpNum,
+                                script: '',
+                                prompts: '',
+                                mediaAssets: []
+                            });
+                            this.saveData();
+                        }
+                    }
+                },
+
+                openEpisode(episode) {
+                    this.currentEpisode = episode;
+                    this.currentView = 'episodeDetail';
+                },
+
+                copyText(text, type) {
+                    navigator.clipboard.writeText(text || '');
+                    if (type === 'script') {
+                        this.copiedScript = true;
+                        setTimeout(() => this.copiedScript = false, 2000);
+                    } else {
+                        this.copiedPrompts = true;
+                        setTimeout(() => this.copiedPrompts = false, 2000);
+                    }
+                },
+
+                addMedia(event, format) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    let type = 'video';
+                    if (file.type.includes('audio')) type = 'audio';
+                    else if (file.type.includes('image')) type = 'image';
+
+                    const fileUrl = URL.createObjectURL(file);
+
+                    this.currentEpisode.mediaAssets.push({
+                        id: 'm_' + Date.now(),
+                        name: file.name,
+                        type: type,
+                        format: format,
+                        url: fileUrl
+                    });
+
+                    this.saveData();
+                    event.target.value = '';
+                },
+
+                deleteMedia(mediaId) {
+                    this.currentEpisode.mediaAssets = this.currentEpisode.mediaAssets.filter(m => m.id !== mediaId);
+                    this.saveData();
+                },
+
+                mediaIcon(type) {
+                    if (type === 'video') return '🎥';
+                    if (type === 'audio') return '🎵';
+                    return '🖼️';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
