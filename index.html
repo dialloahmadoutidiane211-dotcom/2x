@@ -55,7 +55,7 @@
         </div>
     </header>
 
-    <!-- MAIN CONTAINER (Avec padding-top ajusté pour éviter toute coupure) -->
+    <!-- MAIN CONTAINER -->
     <main class="max-w-6xl mx-auto p-4 md:p-6 pt-6 md:pt-8 space-y-6">
 
         <!-- 1. TABLEAU DE BORD (DASHBOARD) -->
@@ -140,9 +140,15 @@
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[200px]" x-text="currentProject.title"></span>
                 </div>
 
-                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-lg">
-                    <h2 class="text-2xl font-bold mb-1 truncate" x-text="currentProject.title"></h2>
-                    <p class="text-sm text-gray-400 capitalize" x-text="'Type : ' + formatType(currentProject.type)"></p>
+                <!-- En-tête du projet avec option de renommage -->
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg">
+                    <div>
+                        <h2 class="text-2xl font-bold mb-1 truncate" x-text="currentProject.title"></h2>
+                        <p class="text-sm text-gray-400 capitalize" x-text="'Type : ' + formatType(currentProject.type)"></p>
+                    </div>
+                    <button @click="renameProject(currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2.5 rounded-xl transition border border-gray-700/50 shadow-sm">
+                        ✏️ Modifier le nom
+                    </button>
                 </div>
 
                 <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
@@ -159,19 +165,27 @@
                                 <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-4 shadow-md">
                                     <div class="flex justify-between items-center">
                                         <h4 class="font-bold text-lg text-blue-400" x-text="'Saison ' + season.seasonNumber"></h4>
-                                        <button @click="addEpisode(currentProject.id, season.id)" class="text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30 px-3.5 py-1.5 rounded-xl hover:bg-blue-600/30 transition">
-                                            + Ajouter un épisode
-                                        </button>
+                                        <div class="flex items-center space-x-2">
+                                            <button @click="deleteSeason(currentProject.id, season.id)" class="text-xs text-red-400 hover:text-red-300 bg-red-950/40 border border-red-900/40 px-3 py-1.5 rounded-xl transition">
+                                                Supprimer saison
+                                            </button>
+                                            <button @click="addEpisode(currentProject.id, season.id)" class="text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30 px-3.5 py-1.5 rounded-xl hover:bg-blue-600/30 transition">
+                                                + Ajouter un épisode
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                         <template x-for="episode in season.episodes" :key="episode.id">
-                                            <div @click="openEpisode(episode)" class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-4 rounded-xl cursor-pointer transition flex justify-between items-center">
-                                                <div class="overflow-hidden pr-2">
+                                            <div class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-4 rounded-xl transition flex justify-between items-center">
+                                                <div @click="openEpisode(episode)" class="overflow-hidden pr-2 flex-1 cursor-pointer">
                                                     <span class="text-xs text-gray-500 block" x-text="'Épisode ' + episode.episodeNumber"></span>
-                                                    <span class="font-semibold text-white block truncate max-w-[150px]" x-text="episode.title"></span>
+                                                    <span class="font-semibold text-white block truncate max-w-[130px]" x-text="episode.title"></span>
                                                 </div>
-                                                <span class="text-gray-600 flex-shrink-0">➔</span>
+                                                <div class="flex items-center space-x-2 flex-shrink-0">
+                                                    <button @click="deleteEpisode(currentProject.id, season.id, episode.id)" class="text-gray-500 hover:text-red-400 text-sm p-1" title="Supprimer l'épisode">🗑️</button>
+                                                    <span @click="openEpisode(episode)" class="text-gray-600 cursor-pointer">➔</span>
+                                                </div>
                                             </div>
                                         </template>
                                     </div>
@@ -201,18 +215,22 @@
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[100px]" x-text="currentEpisode.title"></span>
                 </div>
 
-                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex justify-between items-center shadow-lg">
+                <!-- En-tête de l'épisode avec option de renommage -->
+                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg">
                     <div class="overflow-hidden pr-2">
                         <h2 class="text-2xl font-bold truncate max-w-[280px] sm:max-w-xl" x-text="currentEpisode.title"></h2>
                         <p class="text-sm text-gray-400">Espace de travail : Scripts, Prompts, Rushes et Formats.</p>
                     </div>
+                    <button @click="renameEpisode(currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2.5 rounded-xl transition border border-gray-700/50 shadow-sm">
+                        ✏️ Modifier le nom
+                    </button>
                 </div>
 
-                <!-- SECTION A : ESPACE TEXTE -->
+                <!-- SECTION A : SCRIPT & PROMPT (Libellés épurés sans logos) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
-                            <label class="font-bold text-sm text-gray-300">📝 Espace Script</label>
+                            <label class="font-bold text-sm text-gray-300">Script</label>
                             <button @click="copyText(currentEpisode.script, 'script')" class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
                         </div>
                         <textarea x-model="currentEpisode.script" @input="saveData()" rows="10" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
@@ -220,10 +238,10 @@
 
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
-                            <label class="font-bold text-sm text-gray-300">🤖 Espace Prompts IA</label>
+                            <label class="font-bold text-sm text-gray-300">Prompt</label>
                             <button @click="copyText(currentEpisode.prompts, 'prompts')" class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
                         </div>
-                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="10" placeholder="Collez vos prompts IA ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
+                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="10" placeholder="Collez vos prompts ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
                     </div>
                 </div>
 
@@ -394,7 +412,7 @@
         </template>
     </main>
 
-    <!-- MODALE : LECTEUR / VISIONNEUSE FORÇANT LES RATIOS DU RÉSEAU -->
+    <!-- MODALE : LECTEUR / VISIONNEUSE -->
     <template x-if="showPreviewModal && previewMediaItem">
         <div class="fixed inset-0 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
             <div class="bg-gray-900 border border-gray-800 rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
@@ -410,7 +428,7 @@
                     <button @click="closePreview()" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-full flex items-center justify-center transition text-lg flex-shrink-0">✕</button>
                 </div>
                 
-                <!-- Conteneur vidéo avec recadrage automatique forcé au ratio du réseau social -->
+                <!-- Conteneur vidéo avec recadrage automatique -->
                 <div class="flex-1 flex items-center justify-center bg-black p-4 min-h-[320px] max-h-[68vh] overflow-hidden">
                     <template x-if="previewMediaItem.type === 'video'">
                         <div class="relative flex items-center justify-center w-full h-full">
@@ -603,6 +621,53 @@
                     if (confirm('Voulez-vous vraiment supprimer ce projet ?')) {
                         this.projects = this.projects.filter(p => p.id !== id);
                         this.saveData();
+                    }
+                },
+
+                renameProject(project) {
+                    const newTitle = prompt("Nouveau nom pour le projet :", project.title);
+                    if (newTitle && newTitle.trim()) {
+                        project.title = newTitle.trim();
+                        this.saveData();
+                    }
+                },
+
+                renameEpisode(episode) {
+                    const newTitle = prompt("Nouveau nom pour l'épisode :", episode.title);
+                    if (newTitle && newTitle.trim()) {
+                        episode.title = newTitle.trim();
+                        this.saveData();
+                    }
+                },
+
+                deleteSeason(projectId, seasonId) {
+                    const project = this.projects.find(p => p.id === projectId);
+                    if (project) {
+                        if (project.seasons.length <= 1) {
+                            alert("Impossible de supprimer la seule saison restante.");
+                            return;
+                        }
+                        if (confirm("Voulez-vous vraiment supprimer cette saison et tous ses épisodes ?")) {
+                            project.seasons = project.seasons.filter(s => s.id !== seasonId);
+                            this.saveData();
+                        }
+                    }
+                },
+
+                deleteEpisode(projectId, seasonId, episodeId) {
+                    const project = this.projects.find(p => p.id === projectId);
+                    if (project) {
+                        const season = project.seasons.find(s => s.id === seasonId);
+                        if (season) {
+                            if (season.episodes.length <= 1) {
+                                alert("Impossible de supprimer le seul épisode restant de cette saison.");
+                                return;
+                            }
+                            if (confirm("Voulez-vous vraiment supprimer cet épisode ?")) {
+                                season.episodes = season.episodes.filter(e => e.id !== episodeId);
+                                this.saveData();
+                            }
+                        }
                     }
                 },
 
