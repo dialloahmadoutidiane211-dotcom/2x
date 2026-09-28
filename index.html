@@ -44,11 +44,11 @@
             </h1>
             <div class="flex items-center space-x-2">
                 <!-- Bouton Actualiser -->
-                <button @click="window.location.reload()" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition shadow-sm flex items-center space-x-1.5" title="Actualiser l'application">
+                <button @click="window.location.reload()" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition shadow-sm flex items-center space-x-1.5" title="Actualiser l'application">
                     <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     <span>Actualiser</span>
                 </button>
-                <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition shadow-sm">
+                <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition shadow-sm">
                     Accueil
                 </button>
             </div>
@@ -140,58 +140,66 @@
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[200px]" x-text="currentProject.title"></span>
                 </div>
 
-                <!-- En-tête du projet avec option de renommage -->
-                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg">
-                    <div>
-                        <h2 class="text-2xl font-bold mb-1 truncate" x-text="currentProject.title"></h2>
-                        <p class="text-sm text-gray-400 capitalize" x-text="'Type : ' + formatType(currentProject.type)"></p>
+                <!-- En-tête du projet compact -->
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
+                    <div class="overflow-hidden">
+                        <h2 class="text-xl sm:text-2xl font-bold truncate" x-text="currentProject.title"></h2>
+                        <p class="text-xs text-gray-400 capitalize mt-0.5" x-text="'Type : ' + formatType(currentProject.type)"></p>
                     </div>
-                    <button @click="renameProject(currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2.5 rounded-xl transition border border-gray-700/50 shadow-sm">
-                        ✏️ Modifier le nom
+                    <button @click="renameProject(currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
+                        Modifier le nom
                     </button>
                 </div>
 
                 <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
-                    <div class="space-y-6">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-bold">Saisons et Épisodes</h3>
-                            <button @click="addSeason(currentProject.id)" class="bg-gray-800 hover:bg-gray-700 text-sm px-3.5 py-2 rounded-xl transition">
-                                + Ajouter une saison
+                    <div class="space-y-4">
+                        
+                        <!-- SÉLECTEUR DE SAISONS STYLE NETFLIX (DÉFILEMENT HORIZONTAL COMPACT) -->
+                        <div class="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+                            <template x-for="season in currentProject.seasons" :key="season.id">
+                                <button @click="activeSeasonId = season.id" 
+                                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex-shrink-0"
+                                        :class="activeSeasonId === season.id ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'bg-gray-900 text-gray-400 hover:text-white border border-gray-800'"
+                                        x-text="'Saison ' + season.seasonNumber">
+                                </button>
+                            </template>
+                            <button @click="addSeason(currentProject.id)" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700/50 flex-shrink-0 whitespace-nowrap">
+                                + Saison
                             </button>
                         </div>
 
-                        <div class="space-y-4">
-                            <template x-for="season in currentProject.seasons" :key="season.id">
-                                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-4 shadow-md">
-                                    <div class="flex justify-between items-center">
-                                        <h4 class="font-bold text-lg text-blue-400" x-text="'Saison ' + season.seasonNumber"></h4>
-                                        <div class="flex items-center space-x-2">
-                                            <button @click="deleteSeason(currentProject.id, season.id)" class="text-xs text-red-400 hover:text-red-300 bg-red-950/40 border border-red-900/40 px-3 py-1.5 rounded-xl transition">
-                                                Supprimer saison
-                                            </button>
-                                            <button @click="addEpisode(currentProject.id, season.id)" class="text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30 px-3.5 py-1.5 rounded-xl hover:bg-blue-600/30 transition">
-                                                + Ajouter un épisode
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                        <template x-for="episode in season.episodes" :key="episode.id">
-                                            <div class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-4 rounded-xl transition flex justify-between items-center">
-                                                <div @click="openEpisode(episode)" class="overflow-hidden pr-2 flex-1 cursor-pointer">
-                                                    <span class="text-xs text-gray-500 block" x-text="'Épisode ' + episode.episodeNumber"></span>
-                                                    <span class="font-semibold text-white block truncate max-w-[130px]" x-text="episode.title"></span>
-                                                </div>
-                                                <div class="flex items-center space-x-2 flex-shrink-0">
-                                                    <button @click="deleteEpisode(currentProject.id, season.id, episode.id)" class="text-gray-500 hover:text-red-400 text-sm p-1" title="Supprimer l'épisode">🗑️</button>
-                                                    <span @click="openEpisode(episode)" class="text-gray-600 cursor-pointer">➔</span>
-                                                </div>
-                                            </div>
-                                        </template>
+                        <!-- CONTENU DE LA SAISON ACTIVE -->
+                        <template x-if="getActiveSeason()">
+                            <div class="bg-gray-900 border border-gray-800 p-4 sm:p-5 rounded-2xl space-y-4 shadow-md">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-bold text-base text-blue-400" x-text="'Saison ' + getActiveSeason().seasonNumber"></h4>
+                                    <div class="flex items-center space-x-2">
+                                        <button @click="deleteSeason(currentProject.id, getActiveSeason().id)" class="text-xs text-red-400 hover:text-red-300 bg-red-950/40 border border-red-900/40 px-2.5 py-1.5 rounded-lg transition">
+                                            Supprimer
+                                        </button>
+                                        <button @click="addEpisode(currentProject.id, getActiveSeason().id)" class="text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30 px-3 py-1.5 rounded-lg hover:bg-blue-600/30 transition">
+                                            + Épisode
+                                        </button>
                                     </div>
                                 </div>
-                            </template>
-                        </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    <template x-for="episode in getActiveSeason().episodes" :key="episode.id">
+                                        <div class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-3.5 rounded-xl transition flex justify-between items-center">
+                                            <div @click="openEpisode(episode)" class="overflow-hidden pr-2 flex-1 cursor-pointer">
+                                                <span class="text-[10px] text-gray-500 block" x-text="'Épisode ' + episode.episodeNumber"></span>
+                                                <span class="font-semibold text-white text-xs sm:text-sm block truncate max-w-[140px]" x-text="episode.title"></span>
+                                            </div>
+                                            <div class="flex items-center space-x-1.5 flex-shrink-0">
+                                                <button @click="deleteEpisode(currentProject.id, getActiveSeason().id, episode.id)" class="text-gray-500 hover:text-red-400 text-xs p-1" title="Supprimer l'épisode">🗑️</button>
+                                                <span @click="openEpisode(episode)" class="text-gray-600 cursor-pointer text-xs">➔</span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
                     </div>
                 </template>
 
@@ -215,18 +223,18 @@
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[100px]" x-text="currentEpisode.title"></span>
                 </div>
 
-                <!-- En-tête de l'épisode avec option de renommage -->
-                <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-lg">
-                    <div class="overflow-hidden pr-2">
-                        <h2 class="text-2xl font-bold truncate max-w-[280px] sm:max-w-xl" x-text="currentEpisode.title"></h2>
-                        <p class="text-sm text-gray-400">Espace de travail : Scripts, Prompts, Rushes et Formats.</p>
+                <!-- En-tête de l'épisode compact -->
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
+                    <div class="overflow-hidden">
+                        <h2 class="text-xl sm:text-2xl font-bold truncate" x-text="currentEpisode.title"></h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Espace de travail : Script, Prompt et Rushes.</p>
                     </div>
-                    <button @click="renameEpisode(currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2.5 rounded-xl transition border border-gray-700/50 shadow-sm">
-                        ✏️ Modifier le nom
+                    <button @click="renameEpisode(currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
+                        Modifier le nom
                     </button>
                 </div>
 
-                <!-- SECTION A : SCRIPT & PROMPT (Libellés épurés sans logos) -->
+                <!-- SECTION A : SCRIPT & PROMPT (Épurés, sans logo) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
@@ -509,6 +517,7 @@
                 projects: JSON.parse(localStorage.getItem('vmax_projects') || '[]'),
                 currentProject: null,
                 currentEpisode: null,
+                activeSeasonId: null,
                 showNewProjectModal: false,
                 newProjectTitle: '',
                 newProjectType: 'serie',
@@ -649,6 +658,7 @@
                         }
                         if (confirm("Voulez-vous vraiment supprimer cette saison et tous ses épisodes ?")) {
                             project.seasons = project.seasons.filter(s => s.id !== seasonId);
+                            this.activeSeasonId = project.seasons[0].id;
                             this.saveData();
                         }
                     }
@@ -673,7 +683,15 @@
 
                 openProject(project) {
                     this.currentProject = project;
+                    if (project.seasons && project.seasons.length > 0) {
+                        this.activeSeasonId = project.seasons[0].id;
+                    }
                     this.currentView = 'projectDetail';
+                },
+
+                getActiveSeason() {
+                    if (!this.currentProject || !this.currentProject.seasons) return null;
+                    return this.currentProject.seasons.find(s => s.id === this.activeSeasonId) || this.currentProject.seasons[0];
                 },
 
                 openMovieWorkspace(project) {
@@ -687,8 +705,9 @@
                     const project = this.projects.find(p => p.id === projectId);
                     if (project) {
                         const nextSeasonNum = project.seasons.length + 1;
+                        const newSeasonId = 's_' + Date.now();
                         project.seasons.push({
-                            id: 's_' + Date.now(),
+                            id: newSeasonId,
                             seasonNumber: nextSeasonNum,
                             episodes: [
                                 {
@@ -701,6 +720,7 @@
                                 }
                             ]
                         });
+                        this.activeSeasonId = newSeasonId;
                         this.saveData();
                     }
                 },
