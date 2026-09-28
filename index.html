@@ -12,6 +12,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js pour la réactivité -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- JSZip pour la gestion des archives .zip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen font-sans overflow-x-hidden" x-data="appData()" x-init="initApp()">
 
@@ -103,26 +105,26 @@
                     </template>
                 </div>
 
-                <!-- SECTION BASSE : SYNCHRONISATION & SAUVEGARDE -->
+                <!-- SECTION BASSE : SYNCHRONISATION & SAUVEGARDE (.ZIP) -->
                 <div class="mt-8 bg-gray-900 border border-gray-800 p-6 rounded-3xl shadow-xl space-y-4">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-lg flex-shrink-0">
                             🔄
                         </div>
                         <div>
-                            <h3 class="font-bold text-base text-white">Synchronisation & Sauvegarde</h3>
-                            <p class="text-xs text-gray-400">Exportez ou importez vos données JSON pour synchroniser vos projets sur tous vos appareils.</p>
+                            <h3 class="font-bold text-base text-white">Synchronisation & Sauvegarde (.ZIP)</h3>
+                            <p class="text-xs text-gray-400">Exportez ou importez vos projets sous forme d'archive ZIP (données + médias compressés).</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 pt-2">
                         <button @click="exportData()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50 shadow-sm">
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                            <span>Exporter les données (JSON)</span>
+                            <span>Exporter en Archive ZIP</span>
                         </button>
                         <label class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50 shadow-sm">
                             <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            <span>Importer une sauvegarde</span>
-                            <input type="file" accept=".json" class="hidden" @change="importData($event)">
+                            <span>Importer une sauvegarde ZIP</span>
+                            <input type="file" accept=".zip,.json" class="hidden" @change="importData($event)">
                         </label>
                     </div>
                 </div>
@@ -146,7 +148,7 @@
                         <h2 class="text-xl sm:text-2xl font-bold truncate" x-text="currentProject.title"></h2>
                         <p class="text-xs text-gray-400 capitalize mt-0.5" x-text="'Type : ' + formatType(currentProject.type)"></p>
                     </div>
-                    <button @click="renameProject(currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
+                    <button @click="openRenameModal('project', currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
                         Modifier le nom
                     </button>
                 </div>
@@ -229,7 +231,7 @@
                         <h2 class="text-xl sm:text-2xl font-bold truncate" x-text="currentEpisode.title"></h2>
                         <p class="text-xs text-gray-400 mt-0.5">Espace de travail : Script, Prompt et Rushes.</p>
                     </div>
-                    <button @click="renameEpisode(currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
+                    <button @click="openRenameModal('episode', currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
                         Modifier le nom
                     </button>
                 </div>
@@ -508,7 +510,29 @@
         </div>
     </template>
 
-    <!-- LOGIQUE JAVASCRIPT (ALPINE.JS) -->
+    <!-- MODALE : RENOMMER -->
+    <template x-if="showRenameModal">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div class="bg-gray-900 border border-gray-800 p-6 rounded-3xl w-full max-w-md space-y-5 shadow-2xl">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold" x-text="renameType === 'project' ? 'Modifier le nom du projet' : 'Modifier le nom de l\'épisode'"></h3>
+                    <button @click="showRenameModal = false" class="text-gray-400 hover:text-white">✕</button>
+                </div>
+                
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-gray-400">Nouveau nom</label>
+                    <input type="text" x-model="renameInputVal" @keyup.enter="confirmRename()" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 text-white" autofocus>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button @click="showRenameModal = false" class="px-4 py-2.5 text-xs font-semibold bg-gray-800 hover:bg-gray-700 rounded-xl transition text-gray-300">Annuler</button>
+                    <button @click="confirmRename()" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 rounded-xl text-white transition shadow-lg shadow-blue-600/20">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- LOGIQUE JAVASCRIPT (ALPINE.JS & JSZIP) -->
     <script>
         function appData() {
             return {
@@ -521,6 +545,12 @@
                 showNewProjectModal: false,
                 newProjectTitle: '',
                 newProjectType: 'serie',
+                
+                showRenameModal: false,
+                renameType: '',
+                renameTarget: null,
+                renameInputVal: '',
+
                 copiedScript: false,
                 copiedPrompts: false,
                 showPreviewModal: false,
@@ -533,7 +563,6 @@
                         this.isLoading = false;
                     }, 1600);
 
-                    // Gestion du geste swipe de gauche vers la droite pour retour en arrière
                     window.addEventListener('touchstart', (e) => {
                         this.touchStartX = e.touches[0].clientX;
                         this.touchStartY = e.touches[0].clientY;
@@ -545,7 +574,6 @@
                         const diffX = touchEndX - this.touchStartX;
                         const diffY = Math.abs(touchEndY - this.touchStartY);
 
-                        // Si le geste commence près du bord gauche (< 50px), glisse vers la droite (> 80px)
                         if (this.touchStartX < 50 && diffX > 80 && diffY < 60) {
                             this.goBack();
                         }
@@ -564,36 +592,103 @@
                     localStorage.setItem('vmax_projects', JSON.stringify(this.projects));
                 },
 
-                exportData() {
-                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.projects));
-                    const downloadAnchor = document.createElement('a');
-                    downloadAnchor.setAttribute("href", dataStr);
-                    downloadAnchor.setAttribute("download", "vmax_backup_" + Date.now() + ".json");
-                    document.body.appendChild(downloadAnchor);
-                    downloadAnchor.click();
-                    downloadAnchor.remove();
+                // EXPORTATION EN ARCHIVE .ZIP (DONNÉES LÉGÈRES + MÉDIAS COMPRESSÉS)
+                async exportData() {
+                    const zip = new JSZip();
+                    const projectsExport = JSON.parse(JSON.stringify(this.projects));
+                    const mediaFolder = zip.folder("media");
+
+                    for (const proj of projectsExport) {
+                        for (const season of proj.seasons) {
+                            for (const ep of season.episodes) {
+                                for (let i = 0; i < ep.mediaAssets.length; i++) {
+                                    const media = ep.mediaAssets[i];
+                                    if (media.url && media.url.startsWith('data:')) {
+                                        const base64Data = media.url.split(',')[1];
+                                        const ext = media.name.split('.').pop() || 'bin';
+                                        const fileName = `media_${media.id}_${i}.${ext}`;
+                                        mediaFolder.file(fileName, base64Data, {base64: true});
+                                        media.filePath = `media/${fileName}`;
+                                        delete media.url;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    zip.file("data.json", JSON.stringify(projectsExport, null, 2));
+
+                    try {
+                        const content = await zip.generateAsync({type: "blob"});
+                        const downloadAnchor = document.createElement('a');
+                        downloadAnchor.href = URL.createObjectURL(content);
+                        downloadAnchor.download = "vmax_backup_" + Date.now() + ".zip";
+                        document.body.appendChild(downloadAnchor);
+                        downloadAnchor.click();
+                        downloadAnchor.remove();
+                    } catch (err) {
+                        alert("Erreur lors de la création de l'archive ZIP.");
+                    }
                 },
 
-                importData(event) {
+                // IMPORTATION INTELLIGENTE (.ZIP OU ANCIEN .JSON)
+                async importData(event) {
                     const file = event.target.files[0];
                     if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        try {
-                            const importedProjects = JSON.parse(e.target.result);
-                            if (Array.isArray(importedProjects)) {
-                                this.projects = importedProjects;
-                                this.saveData();
-                                alert('Données importées avec succès ! Synchronisation effectuée.');
-                            } else {
-                                alert('Format de fichier invalide.');
+
+                    try {
+                        if (file.name.endsWith('.zip')) {
+                            const zip = new JSZip();
+                            const zipContent = await zip.loadAsync(file);
+
+                            if (!zipContent.files["data.json"]) {
+                                alert("Fichier data.json introuvable dans l'archive ZIP.");
+                                return;
                             }
-                        } catch (err) {
-                            alert('Erreur lors de la lecture du fichier.');
+
+                            const jsonStr = await zipContent.files["data.json"].async("string");
+                            const projectsData = JSON.parse(jsonStr);
+
+                            for (const proj of projectsData) {
+                                for (const season of proj.seasons) {
+                                    for (const ep of season.episodes) {
+                                        for (const media of ep.mediaAssets) {
+                                            if (media.filePath && zipContent.files[media.filePath]) {
+                                                const blobData = await zipContent.files[media.filePath].async("blob");
+                                                media.url = await this.blobToBase64(blobData);
+                                                delete media.filePath;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            this.projects = projectsData;
+                            this.saveData();
+                            alert('Sauvegarde ZIP restaurée avec succès ! Tous les médias sont liés.');
+                        } else if (file.name.endsWith('.json')) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                this.projects = JSON.parse(e.target.result);
+                                this.saveData();
+                                alert('Données JSON importées avec succès !');
+                            };
+                            reader.readAsText(file);
+                        } else {
+                            alert('Format de fichier non pris en charge. Veuillez sélectionner un fichier .zip');
                         }
-                    };
-                    reader.readAsText(file);
+                    } catch (err) {
+                        alert("Erreur lors de la lecture du fichier de sauvegarde.");
+                    }
                     event.target.value = '';
+                },
+
+                blobToBase64(blob) {
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(blob);
+                    });
                 },
 
                 formatType(type) {
@@ -661,20 +756,20 @@
                     }
                 },
 
-                renameProject(project) {
-                    const newTitle = prompt("Nouveau nom pour le projet :", project.title);
-                    if (newTitle && newTitle.trim()) {
-                        project.title = newTitle.trim();
-                        this.saveData();
-                    }
+                openRenameModal(type, target) {
+                    this.renameType = type;
+                    this.renameTarget = target;
+                    this.renameInputVal = target.title;
+                    this.showRenameModal = true;
                 },
 
-                renameEpisode(episode) {
-                    const newTitle = prompt("Nouveau nom pour l'épisode :", episode.title);
-                    if (newTitle && newTitle.trim()) {
-                        episode.title = newTitle.trim();
+                confirmRename() {
+                    if (this.renameInputVal && this.renameInputVal.trim()) {
+                        this.renameTarget.title = this.renameInputVal.trim();
                         this.saveData();
                     }
+                    this.showRenameModal = false;
+                    this.renameTarget = null;
                 },
 
                 deleteSeason(projectId, seasonId) {
@@ -796,17 +891,19 @@
                     if (file.type.includes('audio')) type = 'audio';
                     else if (file.type.includes('image')) type = 'image';
 
-                    const fileUrl = URL.createObjectURL(file);
-
-                    this.currentEpisode.mediaAssets.push({
-                        id: 'm_' + Date.now(),
-                        name: file.name,
-                        type: type,
-                        format: format,
-                        url: fileUrl
-                    });
-
-                    this.saveData();
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const base64Url = e.target.result;
+                        this.currentEpisode.mediaAssets.push({
+                            id: 'm_' + Date.now(),
+                            name: file.name,
+                            type: type,
+                            format: format,
+                            url: base64Url
+                        });
+                        this.saveData();
+                    };
+                    reader.readAsDataURL(file);
                     event.target.value = '';
                 },
 
