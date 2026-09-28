@@ -154,7 +154,7 @@
                 <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
                     <div class="space-y-4">
                         
-                        <!-- SÉLECTEUR DE SAISONS STYLE NETFLIX (DÉFILEMENT HORIZONTAL COMPACT) -->
+                        <!-- SÉLECTEUR DE SAISONS STYLE NETFLIX -->
                         <div class="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
                             <template x-for="season in currentProject.seasons" :key="season.id">
                                 <button @click="activeSeasonId = season.id" 
@@ -234,7 +234,7 @@
                     </button>
                 </div>
 
-                <!-- SECTION A : SCRIPT & PROMPT (Épurés, sans logo) -->
+                <!-- SECTION A : SCRIPT & PROMPT -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
@@ -525,11 +525,39 @@
                 copiedPrompts: false,
                 showPreviewModal: false,
                 previewMediaItem: null,
+                touchStartX: 0,
+                touchStartY: 0,
 
                 initApp() {
                     setTimeout(() => {
                         this.isLoading = false;
                     }, 1600);
+
+                    // Gestion du geste swipe de gauche vers la droite pour retour en arrière
+                    window.addEventListener('touchstart', (e) => {
+                        this.touchStartX = e.touches[0].clientX;
+                        this.touchStartY = e.touches[0].clientY;
+                    }, { passive: true });
+
+                    window.addEventListener('touchend', (e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const touchEndY = e.changedTouches[0].clientY;
+                        const diffX = touchEndX - this.touchStartX;
+                        const diffY = Math.abs(touchEndY - this.touchStartY);
+
+                        // Si le geste commence près du bord gauche (< 50px), glisse vers la droite (> 80px)
+                        if (this.touchStartX < 50 && diffX > 80 && diffY < 60) {
+                            this.goBack();
+                        }
+                    }, { passive: true });
+                },
+
+                goBack() {
+                    if (this.currentView === 'episodeDetail') {
+                        this.currentView = 'projectDetail';
+                    } else if (this.currentView === 'projectDetail') {
+                        this.currentView = 'dashboard';
+                    }
                 },
 
                 saveData() {
