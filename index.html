@@ -8,7 +8,7 @@
     <!-- Icône personnalisée pour l'écran d'accueil iOS -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%232563eb%22/><text y=%2270%22 x=%2222%22 font-size=%2255%22>🎬</text></svg>">
     
-    <!-- Tailwind CSS (chargé en priorité pour garantir le design) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js pour la réactivité -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -103,26 +103,26 @@
                     </template>
                 </div>
 
-                <!-- SECTION BASSE : SYNCHRONISATION & SAUVEGARDE (.ZIP) -->
+                <!-- SECTION BASSE : SYNCHRONISATION & SAUVEGARDE -->
                 <div class="mt-8 bg-gray-900 border border-gray-800 p-6 rounded-3xl shadow-xl space-y-4">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-lg flex-shrink-0">
                             🔄
                         </div>
                         <div>
-                            <h3 class="font-bold text-base text-white">Synchronisation & Sauvegarde (.ZIP)</h3>
-                            <p class="text-xs text-gray-400">Exportez ou importez vos projets sous forme d'archive ZIP (données + médias compressés).</p>
+                            <h3 class="font-bold text-base text-white">Synchronisation & Sauvegarde (JSON)</h3>
+                            <p class="text-xs text-gray-400">Exportez ou importez vos données JSON (textes, scripts et médias intégrés).</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 pt-2">
                         <button @click="exportData()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50 shadow-sm">
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                            <span>Exporter en Archive ZIP</span>
+                            <span>Exporter les données (JSON)</span>
                         </button>
                         <label class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50 shadow-sm">
                             <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            <span>Importer une sauvegarde ZIP</span>
-                            <input type="file" accept=".zip,.json" class="hidden" @change="importData($event)">
+                            <span>Importer une sauvegarde</span>
+                            <input type="file" accept=".json" class="hidden" @change="importData($event)">
                         </label>
                     </div>
                 </div>
@@ -530,7 +530,7 @@
         </div>
     </template>
 
-    <!-- LOGIQUE JAVASCRIPT AVEC CHARGEMENT RESILIENT DES SCRIPTS -->
+    <!-- LOGIQUE JAVASCRIPT (ALPINE.JS) -->
     <script>
         function appData() {
             return {
@@ -590,120 +590,36 @@
                     localStorage.setItem('vmax_projects', JSON.stringify(this.projects));
                 },
 
-                // Fonction pour charger JSZip dynamiquement à la demande (résistant aux mauvaises connexions 3G)
-                loadJSZipLibrary() {
-                    return new Promise((resolve, reject) => {
-                        if (window.JSZip) {
-                            resolve(window.JSZip);
-                            return;
-                        }
-                        const script = document.createElement('script');
-                        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-                        script.onload = () => resolve(window.JSZip);
-                        script.onerror = () => reject(new Error("Impossible de télécharger le module de compression. Vérifiez votre connexion internet."));
-                        document.head.appendChild(script);
-                    });
+                exportData() {
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.projects));
+                    const downloadAnchor = document.createElement('a');
+                    downloadAnchor.setAttribute("href", dataStr);
+                    downloadAnchor.setAttribute("download", "vmax_backup_" + Date.now() + ".json");
+                    document.body.appendChild(downloadAnchor);
+                    downloadAnchor.click();
+                    downloadAnchor.remove();
                 },
 
-                // EXPORTATION SÉCURISÉE EN .ZIP (CHARGÉE À LA VOLÉE)
-                async exportData() {
-                    try {
-                        const JSZip = await this.loadJSZipLibrary();
-                        const zip = new JSZip();
-                        const projectsExport = JSON.parse(JSON.stringify(this.projects));
-                        const mediaFolder = zip.folder("media");
-
-                        for (const proj of projectsExport) {
-                            for (const season of proj.seasons) {
-                                for (const ep of season.episodes) {
-                                    for (let i = 0; i < ep.mediaAssets.length; i++) {
-                                        const media = ep.mediaAssets[i];
-                                        if (media.url && media.url.startsWith('data:')) {
-                                            const base64Data = media.url.split(',')[1];
-                                            const ext = media.name.split('.').pop() || 'bin';
-                                            const fileName = `media_${media.id}_${i}.${ext}`;
-                                            mediaFolder.file(fileName, base64Data, {base64: true});
-                                            media.filePath = `media/${fileName}`;
-                                            delete media.url;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        zip.file("data.json", JSON.stringify(projectsExport, null, 2));
-
-                        const content = await zip.generateAsync({type: "blob"});
-                        const downloadAnchor = document.createElement('a');
-                        downloadAnchor.href = URL.createObjectURL(content);
-                        downloadAnchor.download = "vmax_backup_" + Date.now() + ".zip";
-                        document.body.appendChild(downloadAnchor);
-                        downloadAnchor.click();
-                        downloadAnchor.remove();
-                    } catch (err) {
-                        alert(err.message || "Erreur lors de la création de l'archive ZIP.");
-                    }
-                },
-
-                // IMPORTATION SÉCURISÉE (.ZIP OU .JSON)
-                async importData(event) {
+                importData(event) {
                     const file = event.target.files[0];
                     if (!file) return;
-
-                    try {
-                        if (file.name.endsWith('.zip')) {
-                            const JSZip = await this.loadJSZipLibrary();
-                            const zip = new JSZip();
-                            const zipContent = await zip.loadAsync(file);
-
-                            if (!zipContent.files["data.json"]) {
-                                alert("Fichier data.json introuvable dans l'archive ZIP.");
-                                return;
-                            }
-
-                            const jsonStr = await zipContent.files["data.json"].async("string");
-                            const projectsData = JSON.parse(jsonStr);
-
-                            for (const proj of projectsData) {
-                                for (const season of proj.seasons) {
-                                    for (const ep of season.episodes) {
-                                        for (const media of ep.mediaAssets) {
-                                            if (media.filePath && zipContent.files[media.filePath]) {
-                                                const blobData = await zipContent.files[media.filePath].async("blob");
-                                                media.url = await this.blobToBase64(blobData);
-                                                delete media.filePath;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            this.projects = projectsData;
-                            this.saveData();
-                            alert('Sauvegarde ZIP restaurée avec succès ! Tous les médias sont liés.');
-                        } else if (file.name.endsWith('.json')) {
-                            const reader = new FileReader();
-                            reader.onload = (e) => {
-                                this.projects = JSON.parse(e.target.result);
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const importedProjects = JSON.parse(e.target.result);
+                            if (Array.isArray(importedProjects)) {
+                                this.projects = importedProjects;
                                 this.saveData();
-                                alert('Données JSON importées avec succès !');
-                            };
-                            reader.readAsText(file);
-                        } else {
-                            alert('Format de fichier non pris en charge.');
+                                alert('Données et médias importés avec succès !');
+                            } else {
+                                alert('Format de fichier invalide.');
+                            }
+                        } catch (err) {
+                            alert('Erreur lors de la lecture du fichier.');
                         }
-                    } catch (err) {
-                        alert("Erreur lors de la lecture du fichier de sauvegarde.");
-                    }
+                    };
+                    reader.readAsText(file);
                     event.target.value = '';
-                },
-
-                blobToBase64(blob) {
-                    return new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => resolve(reader.result);
-                        reader.readAsDataURL(blob);
-                    });
                 },
 
                 formatType(type) {
