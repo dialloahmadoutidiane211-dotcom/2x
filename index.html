@@ -5,75 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VMax - Studio de Production Vidéo</title>
     
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%232563eb%22/><text y=%2270%22 x=%2222%22 font-size=%2255%22>🎬</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2228%22 fill=%22%232563eb%22/><text y=%2270%22 x=%2220%22 font-size=%2255%22>🎬</text></svg>">
     
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        * { box-sizing: border-box; }
-        body { background-color: #090d16; color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #050811; color: #f1f5f9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
         
-        #splash { position: fixed; inset: 0; background: #090d16; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
+        #splash { position: fixed; inset: 0; background: #050811; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
         #splash.hidden-splash { opacity: 0; pointer-events: none; }
         
-        .container { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
-        header { background: rgba(9, 13, 22, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 50; padding: 14px 20px; }
-        .header-content { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+        
+        header { background: rgba(5, 8, 17, 0.9); backdrop-filter: blur(16px); border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 50; padding: 14px 20px; }
+        .header-content { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         
         .grid-cards { display: grid; gap: 16px; grid-template-columns: 1fr; }
         @media(min-width: 640px) { .grid-cards { grid-template-columns: repeat(2, 1fr); } }
-        @media(min-width: 1024px) { .grid-cards { grid-template-columns: repeat(3, 1fr); } }
 
-        .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-hover:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
+        .card { background: #0b1120; border: 1px solid #1e293b; border-radius: 20px; padding: 20px; transition: all 0.25s ease; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.3); }
+        .card-hover:hover { border-color: #3b82f6; transform: translateY(-2px); box-shadow: 0 10px 30px -5px rgba(37,99,235,0.15); }
         
-        button, label.btn-upload { background: #1f2937; color: #f3f4f6; border: 1px solid #374151; padding: 9px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        button:hover, label.btn-upload:hover { background: #374151; border-color: #4b5563; }
-        .btn-primary { background: #2563eb; border-color: #2563eb; color: #fff; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-danger { background: rgba(69, 10, 10, 0.5); color: #f87171; border-color: rgba(127, 29, 29, 0.5); }
-        .btn-danger:hover { background: rgba(127, 29, 29, 0.8); }
+        button, label.btn-upload { background: #151c2f; color: #f1f5f9; border: 1px solid #283548; padding: 10px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        button:hover, label.btn-upload:hover { background: #1e293b; border-color: #3b82f6; }
         
-        input, select, textarea { width: 100%; background: #030712; border: 1px solid #1f2937; color: #fff; padding: 12px 16px; border-radius: 12px; font-size: 14px; outline: none; margin-top: 6px; transition: border-color 0.2s; }
-        input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
+        .btn-primary { background: #2563eb; border-color: #2563eb; color: #fff; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+        
+        .btn-danger { background: rgba(127, 29, 29, 0.2); color: #f87171; border-color: rgba(127, 29, 29, 0.4); }
+        .btn-danger:hover { background: rgba(127, 29, 29, 0.4); }
+        
+        input, select, textarea { width: 100%; background: #050811; border: 1px solid #1e293b; color: #fff; padding: 12px 16px; border-radius: 12px; font-size: 14px; outline: none; margin-top: 6px; transition: all 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
 
-        .badge { font-size: 11px; text-transform: uppercase; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px; display: inline-block; }
-        .badge-serie { background: rgba(59, 7, 100, 0.6); color: #d8b4fe; border: 1px solid rgba(147, 51, 234, 0.3); }
-        .badge-mini { background: rgba(23, 37, 84, 0.6); color: #93c5fd; border: 1px solid rgba(37, 99, 235, 0.3); }
-        .badge-court { background: rgba(5, 46, 22, 0.6); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); }
-        .badge-long { background: rgba(69, 26, 3, 0.6); color: #fde047; border: 1px solid rgba(234, 179, 8, 0.3); }
+        .badge { font-size: 10px; text-transform: uppercase; font-weight: 800; padding: 5px 12px; border-radius: 30px; letter-spacing: 0.8px; display: inline-block; }
+        .badge-serie { background: rgba(147, 51, 234, 0.15); color: #e879f9; border: 1px solid rgba(147, 51, 234, 0.3); }
+        .badge-mini { background: rgba(37, 99, 235, 0.15); color: #93c5fd; border: 1px solid rgba(37, 99, 235, 0.3); }
+        .badge-court { background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .badge-long { background: rgba(234, 179, 8, 0.15); color: #fde047; border: 1px solid rgba(234, 179, 8, 0.3); }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 100; }
-        .modal-box { background: #111827; border: 1px solid #1f2937; border-radius: 24px; width: 100%; max-width: 520px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 100; animation: fadeIn 0.2s ease; }
+        .modal-box { background: #0b1120; border: 1px solid #1e293b; border-radius: 24px; width: 100%; max-width: 500px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
         
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .flex-align { display: flex; align-items: center; gap: 8px; }
         
-        .breadcrumb { background: #111827; border: 1px solid #1f2937; padding: 12px 18px; border-radius: 14px; font-size: 13px; color: #9ca3af; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; overflow-x: auto; }
+        .breadcrumb { background: #0b1120; border: 1px solid #1e293b; padding: 12px 18px; border-radius: 14px; font-size: 13px; color: #94a3b8; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; overflow-x: auto; }
         .breadcrumb span { cursor: pointer; }
         .breadcrumb span:hover { color: #fff; }
 
-        .preview-box { background: #000; border-radius: 14px; overflow: hidden; display: flex; align-items: center; justify-content: center; width: 100%; margin: 0 auto; position: relative; border: 1px solid #1f2937; }
+        .preview-box { background: #000; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center; width: 100%; position: relative; border: 1px solid #1e293b; }
         .ratio-youtube { aspect-ratio: 16 / 9; max-height: 45vh; }
         .ratio-vertical { aspect-ratio: 9 / 16; max-height: 60vh; }
         .ratio-original { max-height: 50vh; width: 100%; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body x-data="appData()" x-init="initApp()">
 
     <!-- SPLASH SCREEN -->
     <div id="splash" :class="isLoading ? '' : 'hidden-splash'">
-        <div style="font-size: 48px; margin-bottom: 12px;">🎬</div>
-        <h2 style="font-size: 20px; font-weight: 800; letter-spacing: 1px; color: #60a5fa; margin: 0;">VMAX STUDIO</h2>
-        <p style="font-size: 12px; color: #9ca3af; margin-top: 6px;">Moteur, ça tourne...</p>
+        <div style="font-size: 50px; margin-bottom: 12px; animation: pulse 1.5s infinite;">🎬</div>
+        <h2 style="font-size: 18px; font-weight: 800; letter-spacing: 2px; color: #3b82f6; margin: 0;">VMAX STUDIO</h2>
     </div>
 
     <!-- HEADER -->
     <header>
         <div class="header-content">
             <div class="flex-align" style="cursor: pointer;" @click="currentView = 'dashboard'">
-                <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 12px rgba(37,99,235,0.3);">🎬</div>
-                <span style="font-size: 20px; font-weight: 800; background: linear-gradient(to right, #60a5fa, #93c5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">VMax</span>
+                <div style="width: 38px; height: 38px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">🎬</div>
+                <span style="font-size: 20px; font-weight: 900; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">VMax</span>
             </div>
             <div class="flex-align">
                 <button @click="window.location.reload()">🔄 Actualiser</button>
@@ -89,21 +92,23 @@
         <template x-if="currentView === 'dashboard'">
             <div style="display: flex; flex-direction: column; gap: 24px;">
                 <div>
-                    <h2 style="font-size: 26px; font-weight: 800; margin: 0 0 6px 0; color: #fff;">Mes Projets Vidéo</h2>
-                    <p style="font-size: 14px; color: #9ca3af; margin: 0;">Gérez vos séries, mini-séries, courts et longs métrages.</p>
+                    <h2 style="font-size: 24px; font-weight: 800; margin: 0 0 4px 0; color: #fff;">Mes Projets Vidéo</h2>
+                    <p style="font-size: 13px; color: #94a3b8; margin: 0;">Gérez vos séries, mini-séries, courts et longs métrages.</p>
                 </div>
 
                 <div class="grid-cards">
-                    <div class="card card-hover" @click="showNewProjectModal = true" style="border: 2px dashed #2563eb50; align-items: center; justify-content: center; text-align: center; background: rgba(37, 99, 235, 0.02); min-height: 160px; cursor: pointer;">
-                        <div style="width: 48px; height: 48px; background: #2563eb; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">+</div>
+                    <!-- Nouveau Projet -->
+                    <div class="card card-hover" @click="showNewProjectModal = true" style="border: 2px dashed rgba(59,130,246,0.3); align-items: center; justify-content: center; text-align: center; background: rgba(37, 99, 235, 0.02); min-height: 150px; cursor: pointer;">
+                        <div style="width: 44px; height: 44px; background: #2563eb; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: white; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">+</div>
                         <div>
-                            <span style="font-weight: 700; font-size: 15px; color: #fff;">Nouveau Projet</span>
-                            <p style="font-size: 12px; color: #9ca3af; margin: 2px 0 0 0;">Série, film ou mini-série</p>
+                            <span style="font-weight: 700; font-size: 14px; color: #fff;">Nouveau Projet</span>
+                            <p style="font-size: 11px; color: #94a3b8; margin: 2px 0 0 0;">Série ou film</p>
                         </div>
                     </div>
 
+                    <!-- Liste des projets -->
                     <template x-for="project in projects" :key="project.id">
-                        <div class="card card-hover" @click="openProject(project)" style="min-height: 160px; cursor: pointer;">
+                        <div class="card card-hover" @click="openProject(project)" style="min-height: 150px; cursor: pointer;">
                             <div class="flex-between">
                                 <span class="badge" 
                                     :class="{
@@ -114,26 +119,27 @@
                                     }" 
                                     x-text="formatType(project.type)">
                                 </span>
-                                <button class="btn-danger" style="padding: 6px 10px; font-size: 12px;" @click.stop="deleteProject(project.id)">🗑️</button>
+                                <button class="btn-danger" style="padding: 6px 10px; font-size: 11px;" @click.stop="deleteProject(project.id)">🗑️</button>
                             </div>
-                            <div style="margin: 12px 0;">
-                                <h3 style="font-size: 18px; font-weight: 700; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="project.title"></h3>
+                            <div style="margin: 10px 0;">
+                                <h3 style="font-size: 17px; font-weight: 700; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="project.title"></h3>
                             </div>
-                            <div style="border-top: 1px solid #1f2937; padding-top: 12px; display: flex; justify-content: space-between; font-size: 13px; color: #9ca3af;">
+                            <div style="border-top: 1px solid #1e293b; padding-top: 10px; display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8;">
                                 <span>Ouvrir l'espace</span>
-                                <span style="color: #60a5fa; font-weight: bold;">→</span>
+                                <span style="color: #3b82f6; font-weight: bold;">→</span>
                             </div>
                         </div>
                     </template>
                 </div>
 
-                <div class="card" style="margin-top: 8px;">
-                    <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #fff;">🔄 Synchronisation & Sauvegarde</h3>
-                    <p style="font-size: 13px; color: #9ca3af; margin: 0 0 16px 0;">Exportez ou importez vos projets et médias sous format JSON.</p>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <button class="btn-primary" @click="exportData()">⬇️ Exporter les données</button>
+                <!-- Sauvegarde & Sync -->
+                <div class="card">
+                    <h3 style="font-size: 15px; font-weight: 700; margin: 0 0 4px 0; color: #fff;">🔄 Sauvegarde & Synchronisation</h3>
+                    <p style="font-size: 12px; color: #94a3b8; margin: 0 0 16px 0;">Exportez ou importez vos données de projets en toute sécurité.</p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary" @click="exportData()">⬇️ Exporter (JSON)</button>
                         <label class="btn-upload">
-                            ⬆️ Importer une sauvegarde
+                            ⬆️ Importer
                             <input type="file" accept=".json" style="display: none;" @change="importData($event)">
                         </label>
                     </div>
@@ -150,18 +156,18 @@
                     <span style="color: #fff; font-weight: 600;" x-text="currentProject.title"></span>
                 </div>
 
-                <div class="card">
+                <div class="card" style="padding: 16px 20px;">
                     <div class="flex-between">
                         <div>
-                            <h2 style="font-size: 22px; font-weight: 800; margin: 0; color: #fff;" x-text="currentProject.title"></h2>
-                            <p style="font-size: 13px; color: #9ca3af; margin: 4px 0 0 0;" x-text="'Type : ' + formatType(currentProject.type)"></p>
+                            <h2 style="font-size: 20px; font-weight: 800; margin: 0; color: #fff;" x-text="currentProject.title"></h2>
+                            <p style="font-size: 12px; color: #94a3b8; margin: 2px 0 0 0;" x-text="'Type : ' + formatType(currentProject.type)"></p>
                         </div>
-                        <button @click="renameProject(currentProject)">Modifier le nom</button>
+                        <button @click="renameProject(currentProject)" style="padding: 6px 12px; font-size: 12px;">Renommer</button>
                     </div>
                 </div>
 
                 <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
-                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
                         <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
                             <template x-for="season in currentProject.seasons" :key="season.id">
                                 <button @click="activeSeasonId = season.id" 
@@ -173,25 +179,25 @@
                         </div>
 
                         <template x-if="getActiveSeason()">
-                            <div class="card" style="gap: 16px;">
+                            <div class="card" style="gap: 14px;">
                                 <div class="flex-between">
-                                    <h4 style="font-size: 16px; font-weight: 700; color: #60a5fa; margin: 0;" x-text="'Saison ' + getActiveSeason().seasonNumber"></h4>
+                                    <h4 style="font-size: 15px; font-weight: 700; color: #3b82f6; margin: 0;" x-text="'Saison ' + getActiveSeason().seasonNumber"></h4>
                                     <div class="flex-align">
-                                        <button class="btn-danger" style="padding: 6px 10px; font-size: 12px;" @click="deleteSeason(currentProject.id, getActiveSeason().id)">Supprimer</button>
-                                        <button class="btn-primary" style="padding: 6px 12px; font-size: 12px;" @click="addEpisode(currentProject.id, getActiveSeason().id)">+ Épisode</button>
+                                        <button class="btn-danger" style="padding: 5px 10px; font-size: 11px;" @click="deleteSeason(currentProject.id, getActiveSeason().id)">Supprimer</button>
+                                        <button class="btn-primary" style="padding: 5px 12px; font-size: 11px;" @click="addEpisode(currentProject.id, getActiveSeason().id)">+ Épisode</button>
                                     </div>
                                 </div>
 
                                 <div class="grid-cards">
                                     <template x-for="episode in getActiveSeason().episodes" :key="episode.id">
-                                        <div style="background: #030712; border: 1px solid #1f2937; padding: 14px 18px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" class="card-hover" @click="openEpisode(episode)">
+                                        <div style="background: #050811; border: 1px solid #1e293b; padding: 12px 16px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" class="card-hover" @click="openEpisode(episode)">
                                             <div>
-                                                <span style="font-size: 11px; color: #9ca3af;" x-text="'Épisode ' + episode.episodeNumber"></span>
-                                                <div style="font-weight: 700; font-size: 15px; color: #fff; margin-top: 2px;" x-text="episode.title"></div>
+                                                <span style="font-size: 10px; color: #94a3b8;" x-text="'Épisode ' + episode.episodeNumber"></span>
+                                                <div style="font-weight: 700; font-size: 14px; color: #fff; margin-top: 1px;" x-text="episode.title"></div>
                                             </div>
                                             <div class="flex-align">
-                                                <button class="btn-danger" style="padding: 4px 8px; font-size: 12px;" @click.stop="deleteEpisode(currentProject.id, getActiveSeason().id, episode.id)">🗑️</button>
-                                                <span style="color: #60a5fa; font-size: 16px; font-weight: bold;">→</span>
+                                                <button class="btn-danger" style="padding: 4px 8px; font-size: 11px;" @click.stop="deleteEpisode(currentProject.id, getActiveSeason().id, episode.id)">🗑️</button>
+                                                <span style="color: #3b82f6; font-weight: bold;">→</span>
                                             </div>
                                         </div>
                                     </template>
@@ -209,7 +215,7 @@
 
         <!-- ESPACE ÉPISODE -->
         <template x-if="currentView === 'episodeDetail' && currentEpisode">
-            <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div style="display: flex; flex-direction: column; gap: 20px;">
                 <div class="breadcrumb">
                     <span @click="currentView = 'dashboard'">Accueil</span>
                     <span>/</span>
@@ -218,89 +224,90 @@
                     <span style="color: #fff; font-weight: 600;" x-text="currentEpisode.title"></span>
                 </div>
 
-                <div class="card">
+                <div class="card" style="padding: 16px 20px;">
                     <div class="flex-between">
                         <div>
-                            <h2 style="font-size: 22px; font-weight: 800; margin: 0; color: #fff;" x-text="currentEpisode.title"></h2>
-                            <p style="font-size: 13px; color: #9ca3af; margin: 4px 0 0 0;">Espace de travail : Script, Prompt et Rushes multimédia.</p>
+                            <h2 style="font-size: 20px; font-weight: 800; margin: 0; color: #fff;" x-text="currentEpisode.title"></h2>
+                            <p style="font-size: 12px; color: #94a3b8; margin: 2px 0 0 0;">Script, Prompts & Rushes multiformats.</p>
                         </div>
-                        <button @click="renameEpisode(currentEpisode)">Modifier le nom</button>
+                        <button @click="renameEpisode(currentEpisode)" style="padding: 6px 12px; font-size: 12px;">Renommer</button>
                     </div>
                 </div>
 
-                <div class="grid-cards" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                <!-- Script & Prompt -->
+                <div class="grid-cards" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
                     <div class="card">
-                        <div class="flex-between" style="margin-bottom: 10px;">
-                            <label style="font-weight: 700; font-size: 12px; color: #9ca3af; text-transform: uppercase;">Script</label>
-                            <button style="padding: 4px 10px; font-size: 12px;" @click="copyText(currentEpisode.script, 'script')" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
+                        <div class="flex-between" style="margin-bottom: 8px;">
+                            <label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Script</label>
+                            <button style="padding: 4px 10px; font-size: 11px;" @click="copyText(currentEpisode.script, 'script')" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
                         </div>
-                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="8" placeholder="Écrivez ou collez votre script ici..."></textarea>
+                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="7" placeholder="Rédigez votre script..."></textarea>
                     </div>
 
                     <div class="card">
-                        <div class="flex-between" style="margin-bottom: 10px;">
-                            <label style="font-weight: 700; font-size: 12px; color: #9ca3af; text-transform: uppercase;">Prompt</label>
-                            <button style="padding: 4px 10px; font-size: 12px;" @click="copyText(currentEpisode.prompts, 'prompts')" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
+                        <div class="flex-between" style="margin-bottom: 8px;">
+                            <label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Prompt</label>
+                            <button style="padding: 4px 10px; font-size: 11px;" @click="copyText(currentEpisode.prompts, 'prompts')" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
                         </div>
-                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="8" placeholder="Écrivez ou collez vos prompts ici..."></textarea>
+                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="7" placeholder="Collez vos prompts..."></textarea>
                     </div>
                 </div>
 
                 <!-- Fichiers Originaux -->
                 <div class="card">
-                    <div class="flex-between" style="margin-bottom: 16px;">
-                        <h3 style="font-size: 16px; font-weight: 700; margin: 0; color: #fff;">📁 Fichiers Originaux</h3>
-                        <label class="btn-primary" style="padding: 8px 14px; font-size: 12px;">
-                            + Ajouter un fichier
+                    <div class="flex-between" style="margin-bottom: 14px;">
+                        <h3 style="font-size: 15px; font-weight: 700; margin: 0; color: #fff;">📁 Fichiers Originaux</h3>
+                        <label class="btn-primary" style="padding: 6px 12px; font-size: 11px;">
+                            + Ajouter
                             <input type="file" style="display: none;" @change="addMedia($event, 'original')">
                         </label>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
                         <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'original')" :key="media.id">
-                            <div style="background: #030712; border: 1px solid #1f2937; padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
-                                <div class="flex-align" style="overflow: hidden;">
-                                    <span style="font-size: 16px;" x-text="mediaIcon(media.type)"></span>
-                                    <span style="font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;" x-text="media.name"></span>
+                            <div style="background: #050811; border: 1px solid #1e293b; padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                                <div class="flex-align" style="overflow: hidden; max-width: 50%;">
+                                    <span style="font-size: 14px;" x-text="mediaIcon(media.type)"></span>
+                                    <span style="font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="media.name"></span>
                                 </div>
                                 <div class="flex-align">
-                                    <button class="btn-primary" style="padding: 5px 10px; font-size: 11px;" @click="previewMedia(media)">Voir ▶️</button>
-                                    <a :href="media.url" :download="media.name" style="background:#1f2937; color:#fff; padding:5px 10px; border-radius:8px; text-decoration:none; font-size:11px; font-weight:600; border:1px solid #374151;">Sauver</a>
-                                    <button class="btn-danger" style="padding: 5px 8px; font-size: 11px;" @click="deleteMedia(media.id)">✕</button>
+                                    <button class="btn-primary" style="padding: 4px 8px; font-size: 11px;" @click="previewMedia(media)">Voir ▶️</button>
+                                    <a :href="media.url" :download="media.name" style="background:#151c2f; color:#fff; padding:4px 8px; border-radius:8px; text-decoration:none; font-size:11px; border:1px solid #283548;">Sauver</a>
+                                    <button class="btn-danger" style="padding: 4px 6px; font-size: 11px;" @click="deleteMedia(media.id)">✕</button>
                                 </div>
                             </div>
                         </template>
                         <template x-if="currentEpisode.mediaAssets.filter(m => m.format === 'original').length === 0">
-                            <p style="font-size: 13px; color: #6b7280; margin: 0; padding: 8px 0;">Aucun fichier original enregistré.</p>
+                            <p style="font-size: 12px; color: #64748b; margin: 0; padding: 4px 0;">Aucun fichier original.</p>
                         </template>
                     </div>
                 </div>
 
                 <!-- Formats Réseaux Sociaux -->
                 <div class="card">
-                    <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 16px 0; color: #fff;">📱 Formats Réseaux Sociaux</h3>
-                    <div class="grid-cards" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                    <h3 style="font-size: 15px; font-weight: 700; margin: 0 0 14px 0; color: #fff;">📱 Formats Réseaux Sociaux</h3>
+                    <div class="grid-cards" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                         <template x-for="fmt in ['youtube', 'youtube_shorts', 'tiktok', 'instagram', 'facebook']">
-                            <div style="background: #030712; border: 1px solid #1f2937; padding: 16px; border-radius: 14px; display: flex; flex-direction: column; gap: 12px;">
+                            <div style="background: #050811; border: 1px solid #1e293b; padding: 14px; border-radius: 14px; display: flex; flex-direction: column; gap: 10px;">
                                 <div class="flex-between">
-                                    <span style="font-weight: 700; font-size: 13px; color: #60a5fa; text-transform: capitalize;" x-text="fmt.replace('_', ' ')"></span>
-                                    <label class="btn-upload" style="padding: 4px 10px; font-size: 11px;">
+                                    <span style="font-weight: 700; font-size: 12px; color: #3b82f6; text-transform: capitalize;" x-text="fmt.replace('_', ' ')"></span>
+                                    <label class="btn-upload" style="padding: 3px 8px; font-size: 11px;">
                                         + Ajouter
                                         <input type="file" style="display: none;" @change="addMedia($event, fmt)">
                                     </label>
                                 </div>
-                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === fmt)" :key="media.id">
-                                        <div style="background: #111827; border: 1px solid #1f2937; padding: 10px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-                                            <span style="font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px;" x-text="media.name"></span>
+                                        <div style="background: #0b1120; border: 1px solid #1e293b; padding: 8px 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+                                            <span style="font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;" x-text="media.name"></span>
                                             <div class="flex-align">
-                                                <button class="btn-primary" style="padding: 3px 8px; font-size: 10px;" @click="previewMedia(media)">Voir</button>
-                                                <a :href="media.url" :download="media.name" style="background:#374151; color:#fff; padding:3px 8px; border-radius:6px; text-decoration:none; font-size:10px;">Sauver</a>
-                                                <button class="btn-danger" style="padding: 3px 6px; font-size: 10px;" @click="deleteMedia(media.id)">✕</button>
+                                                <button class="btn-primary" style="padding: 2px 6px; font-size: 10px;" @click="previewMedia(media)">Voir</button>
+                                                <a :href="media.url" :download="media.name" style="background:#1e293b; color:#fff; padding:2px 6px; border-radius:6px; text-decoration:none; font-size:10px;">Sauver</a>
+                                                <button class="btn-danger" style="padding: 2px 6px; font-size: 10px;" @click="deleteMedia(media.id)">✕</button>
                                             </div>
                                         </div>
                                     </template>
                                     <template x-if="currentEpisode.mediaAssets.filter(m => m.format === fmt).length === 0">
-                                        <span style="font-size: 11px; color: #4b5563; font-style: italic;">Aucun média assigné</span>
+                                        <span style="font-size: 11px; color: #64748b; font-style: italic;">Aucun média assigné</span>
                                     </template>
                                 </div>
                             </div>
@@ -314,13 +321,13 @@
     <!-- MODALE LECTEUR MEDIA UNIVERSEL -->
     <template x-if="showPreviewModal && previewMediaItem">
         <div class="modal-overlay">
-            <div class="modal-box" style="max-width: 650px;">
-                <div class="flex-between" style="margin-bottom: 16px;">
+            <div class="modal-box" style="max-width: 600px;">
+                <div class="flex-between" style="margin-bottom: 14px;">
                     <div>
-                        <h3 style="font-size: 16px; font-weight: 700; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 340px;" x-text="previewMediaItem.name"></h3>
-                        <span style="font-size: 11px; color: #60a5fa; text-transform: uppercase; font-weight: 600;" x-text="'Aperçu format : ' + previewMediaItem.format.replace('_', ' ')"></span>
+                        <h3 style="font-size: 15px; font-weight: 700; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px;" x-text="previewMediaItem.name"></h3>
+                        <span style="font-size: 10px; color: #3b82f6; text-transform: uppercase; font-weight: 700;" x-text="'Aperçu format : ' + previewMediaItem.format.replace('_', ' ')"></span>
                     </div>
-                    <button @click="closePreview()" style="padding: 6px 12px; font-size: 12px;">✕ Fermer</button>
+                    <button @click="closePreview()" style="padding: 4px 10px; font-size: 11px;">✕ Fermer</button>
                 </div>
 
                 <div class="preview-box" 
@@ -330,24 +337,19 @@
                          'ratio-original': previewMediaItem.format === 'original'
                      }">
                     
-                    <!-- Vidéo -->
                     <template x-if="previewMediaItem.type === 'video'">
                         <video :src="previewMediaItem.url" controls autoplay playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
                     </template>
-                    
-                    <!-- Audio -->
                     <template x-if="previewMediaItem.type === 'audio'">
                         <audio :src="previewMediaItem.url" controls autoplay style="width: 90%;"></audio>
                     </template>
-                    
-                    <!-- Image -->
                     <template x-if="previewMediaItem.type === 'image'">
                         <img :src="previewMediaItem.url" style="width: 100%; height: 100%; object-fit: contain;">
                     </template>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-                    <button class="btn-primary" @click="closePreview()">Fermer la vue</button>
+                <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                    <button class="btn-primary" @click="closePreview()" style="padding: 6px 14px; font-size: 12px;">Fermer la vue</button>
                 </div>
             </div>
         </div>
@@ -357,16 +359,16 @@
     <template x-if="showNewProjectModal">
         <div class="modal-overlay">
             <div class="modal-box">
-                <div class="flex-between" style="margin-bottom: 20px;">
-                    <h3 style="font-size: 18px; font-weight: 800; margin: 0; color: #fff;">Nouveau Projet Vidéo</h3>
-                    <button @click="showNewProjectModal = false" style="padding: 6px 10px;">✕</button>
+                <div class="flex-between" style="margin-bottom: 16px;">
+                    <h3 style="font-size: 17px; font-weight: 800; margin: 0; color: #fff;">Nouveau Projet Vidéo</h3>
+                    <button @click="showNewProjectModal = false" style="padding: 4px 8px;">✕</button>
                 </div>
-                <div style="margin-bottom: 16px;">
-                    <label style="font-size: 12px; color: #9ca3af; font-weight: 700; text-transform: uppercase;">Titre du projet</label>
-                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Film de Science-Fiction">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Titre du projet</label>
+                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Film">
                 </div>
-                <div style="margin-bottom: 24px;">
-                    <label style="font-size: 12px; color: #9ca3af; font-weight: 700; text-transform: uppercase;">Type de projet</label>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Type de projet</label>
                     <select x-model="newProjectType">
                         <option value="serie">Série entière</option>
                         <option value="mini_serie">Mini-série</option>
@@ -374,14 +376,15 @@
                         <option value="long_metrage">Long-métrage</option>
                     </select>
                 </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button @click="showNewProjectModal = false">Annuler</button>
-                    <button class="btn-primary" @click="createProject()">Créer le projet</button>
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                    <button @click="showNewProjectModal = false" style="padding: 8px 14px; font-size: 12px;">Annuler</button>
+                    <button class="btn-primary" @click="createProject()" style="padding: 8px 16px; font-size: 12px;">Créer</button>
                 </div>
             </div>
         </div>
     </template>
 
+    <!-- SCRIPT ALPINE -->
     <script>
         function appData() {
             return {
@@ -402,7 +405,7 @@
                 touchStartY: 0,
 
                 initApp() {
-                    setTimeout(() => { this.isLoading = false; }, 400);
+                    setTimeout(() => { this.isLoading = false; }, 300);
 
                     window.addEventListener('touchstart', (e) => {
                         this.touchStartX = e.touches[0].clientX;
@@ -496,14 +499,14 @@
                 },
 
                 deleteProject(id) {
-                    if (confirm('Voulez-vous vraiment supprimer ce projet ?')) {
+                    if (confirm('Supprimer ce projet ?')) {
                         this.projects = this.projects.filter(p => p.id !== id);
                         this.saveData();
                     }
                 },
 
                 renameProject(project) {
-                    const newTitle = prompt("Nouveau nom du projet :", project.title);
+                    const newTitle = prompt("Nouveau nom :", project.title);
                     if (newTitle && newTitle.trim()) {
                         project.title = newTitle.trim();
                         this.saveData();
@@ -511,7 +514,7 @@
                 },
 
                 renameEpisode(episode) {
-                    const newTitle = prompt("Nouveau nom de l'épisode :", episode.title);
+                    const newTitle = prompt("Nouveau nom :", episode.title);
                     if (newTitle && newTitle.trim()) {
                         episode.title = newTitle.trim();
                         this.saveData();
@@ -520,7 +523,7 @@
 
                 deleteSeason(projectId, seasonId) {
                     const project = this.projects.find(p => p.id === projectId);
-                    if (project && project.seasons.length > 1 && confirm("Supprimer cette saison et ses épisodes ?")) {
+                    if (project && project.seasons.length > 1 && confirm("Supprimer cette saison ?")) {
                         project.seasons = project.seasons.filter(s => s.id !== seasonId);
                         this.activeSeasonId = project.seasons[0].id;
                         this.saveData();
