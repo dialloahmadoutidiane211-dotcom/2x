@@ -5,184 +5,201 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VMax - Gestionnaire de Projets Vidéo</title>
     
-    <!-- Icône personnalisée -->
+    <!-- Icône iOS -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%232563eb%22/><text y=%2270%22 x=%2222%22 font-size=%2255%22>🎬</text></svg>">
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</head>
-<body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased overflow-x-hidden selection:bg-blue-600 selection:text-white" x-data="appData()" x-init="initApp()">
 
-    <!-- SPLASH SCREEN PROPRE QUI DISPARAÎT -->
-    <div x-show="isLoading" 
-         x-transition:leave="transition ease-out duration-500"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0 pointer-events-none"
-         class="fixed inset-0 z-50 bg-gray-950 flex flex-col items-center justify-center space-y-4">
-        <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-600/30 text-3xl animate-pulse">
-            🎬
-        </div>
-        <div class="text-center">
-            <h2 class="text-xl font-extrabold tracking-wider text-white uppercase">VMax Studio</h2>
-            <p class="text-xs text-gray-400 mt-1">Chargement de l'espace...</p>
-        </div>
+    <!-- CSS NATIF PROPRE ET FLUIDE (Zero bug mobile) -->
+    <style>
+        * { box-sizing: border-box; }
+        body { background-color: #030712; color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
+        
+        /* Splash Screen */
+        #splash { position: fixed; inset: 0; background: #030712; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
+        #splash.hidden-splash { opacity: 0; pointer-events: none; }
+        
+        /* Layout & Containers */
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
+        header { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid #1f2937; position: sticky; top: 0; z-index: 50; padding: 12px 16px; }
+        .header-content { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Grilles et Cartes */
+        .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+        @media(min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media(min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+        .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; }
+        .card:hover { border-color: #3b82f6; }
+        
+        /* Boutons & Formulaires */
+        button, label.btn-file { background: #1f2937; color: #f3f4f6; border: 1px solid #374151; padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        button:hover, label.btn-file:hover { background: #374151; }
+        .btn-primary { background: #2563eb; border-color: #2563eb; color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-danger { background: #450a0a; color: #f87171; border-color: #7f1d1d; }
+        
+        input, select, textarea { width: 100%; background: #030712; border: 1px solid #1f2937; color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 14px; outline: none; margin-top: 6px; }
+        input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
+
+        /* Badges */
+        .badge { font-size: 10px; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 20px; display: inline-block; letter-spacing: 0.5px; }
+        .badge-serie { background: #3b0764; color: #d8b4fe; border: 1px solid #581c87; }
+        .badge-mini { background: #172554; color: #93c5fd; border: 1px solid #1e40af; }
+        .badge-court { background: #052e16; color: #86efac; border: 1px solid #14532d; }
+        .badge-long { background: #451a03; color: #fde047; border: 1px solid #78350f; }
+
+        /* Modales */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 100; }
+        .modal-box { background: #111827; border: 1px solid #1f2937; border-radius: 20px; width: 100%; max-width: 480px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+        
+        /* Divers */
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .flex-align { display: flex; align-items: center; gap: 8px; }
+        .breadcrumb { background: #111827; border: 1px solid #1f2937; padding: 10px 16px; border-radius: 12px; font-size: 13px; color: #9ca3af; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; overflow-x: auto; }
+        .breadcrumb span { cursor: pointer; }
+        .breadcrumb span:hover { color: #fff; }
+    </style>
+</head>
+<body x-data="appData()" x-init="initApp()">
+
+    <!-- SPLASH SCREEN PROPRE -->
+    <div id="splash" :class="isLoading ? '' : 'hidden-splash'">
+        <div style="font-size: 48px; margin-bottom: 12px;">🎬</div>
+        <h2 style="font-size: 20px; font-weight: 800; letter-spacing: 1px; color: #60a5fa; margin: 0;">VMAX STUDIO</h2>
+        <p style="font-size: 12px; color: #9ca3af; margin-top: 6px;">Moteur, ça tourne...</p>
     </div>
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="bg-gray-900/80 backdrop-blur-md border-b border-gray-800/80 sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2.5 cursor-pointer" @click="currentView = 'dashboard'">
-                <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-600/30">🎬</div>
-                <span class="text-lg font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">VMax</span>
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <div class="flex-align" style="cursor: pointer;" @click="currentView = 'dashboard'">
+                <div style="width: 32px; height: 32px; background: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">🎬</div>
+                <span style="font-size: 18px; font-weight: 800; color: #60a5fa;">VMax</span>
             </div>
-            <div class="flex items-center space-x-2">
-                <button @click="window.location.reload()" class="text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-2 rounded-xl transition flex items-center space-x-1.5 border border-gray-700/50">
-                    <span>🔄</span>
-                    <span class="hidden sm:inline">Actualiser</span>
-                </button>
-                <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-2 rounded-xl transition border border-gray-700/50">
-                    Accueil
-                </button>
+            <div class="flex-align">
+                <button @click="window.location.reload()">🔄 Actualiser</button>
+                <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'">Accueil</button>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <!-- CONTENU PRINCIPAL -->
+    <main class="container">
 
-        <!-- 1. TABLEAU DE BORD -->
+        <!-- 1. DASHBOARD -->
         <template x-if="currentView === 'dashboard'">
-            <div class="space-y-6">
+            <div style="display: flex; flex-direction: column; gap: 24px;">
                 <div>
-                    <h2 class="text-2xl font-bold tracking-tight text-white">Mes Projets Vidéo</h2>
-                    <p class="text-sm text-gray-400 mt-0.5">Gérez vos séries, mini-séries, courts et longs métrages.</p>
+                    <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 4px 0;">Mes Projets Vidéo</h2>
+                    <p style="font-size: 14px; color: #9ca3af; margin: 0;">Gérez vos séries, mini-séries, courts et longs métrages.</p>
                 </div>
 
-                <!-- GRILLE DES PROJETS -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="grid">
                     <!-- Carte Nouveau Projet -->
-                    <div @click="showNewProjectModal = true" class="group bg-gradient-to-br from-blue-950/20 via-gray-900 to-gray-900 border border-blue-500/30 hover:border-blue-500/60 p-5 rounded-2xl cursor-pointer transition-all duration-200 shadow-lg flex flex-col items-center justify-center text-center space-y-2 min-h-[150px]">
-                        <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-md shadow-blue-600/30 group-hover:scale-105 transition-transform">
-                            +
-                        </div>
+                    <div class="card" @click="showNewProjectModal = true" style="border-style: dashed; border-color: #3b82f6; align-items: center; justify-content: center; text-align: center; background: rgba(37, 99, 235, 0.03);">
+                        <div style="width: 44px; height: 44px; background: #2563eb; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: white; margin-bottom: 8px;">+</div>
                         <div>
-                            <span class="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">Nouveau Projet</span>
-                            <p class="text-xs text-gray-400 mt-0.5">Créer une série ou un film</p>
+                            <span style="font-weight: 700; font-size: 15px; color: #fff;">Nouveau Projet</span>
+                            <p style="font-size: 12px; color: #9ca3af; margin: 2px 0 0 0;">Série, film ou mini-série</p>
                         </div>
                     </div>
 
                     <!-- Liste des projets -->
                     <template x-for="project in projects" :key="project.id">
-                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-gray-700 p-5 rounded-2xl cursor-pointer transition-all duration-200 shadow-sm flex flex-col justify-between min-h-[150px]">
-                            <div class="flex justify-between items-start gap-2">
-                                <span class="text-[11px] uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full border border-gray-800"
+                        <div class="card" @click="openProject(project)">
+                            <div class="flex-between">
+                                <span class="badge" 
                                     :class="{
-                                        'bg-purple-950/60 text-purple-300 border-purple-900/50': project.type === 'serie',
-                                        'bg-blue-950/60 text-blue-300 border-blue-900/50': project.type === 'mini_serie',
-                                        'bg-green-950/60 text-green-300 border-green-900/50': project.type === 'court_metrage',
-                                        'bg-amber-950/60 text-amber-300 border-amber-900/50': project.type === 'long_metrage'
-                                    }"
+                                        'badge-serie': project.type === 'serie',
+                                        'badge-mini': project.type === 'mini_serie',
+                                        'badge-court': project.type === 'court_metrage',
+                                        'badge-long': project.type === 'long_metrage'
+                                    }" 
                                     x-text="formatType(project.type)">
                                 </span>
-                                <button @click.stop="deleteProject(project.id)" class="text-gray-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-gray-800 transition">🗑️</button>
+                                <button class="btn-danger" style="padding: 4px 8px;" @click.stop="deleteProject(project.id)">🗑️</button>
                             </div>
-                            <div class="my-3">
-                                <h3 class="text-base font-bold text-white truncate" x-text="project.title"></h3>
+                            <div style="margin: 12px 0;">
+                                <h3 style="font-size: 17px; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="project.title"></h3>
                             </div>
-                            <div class="pt-3 border-t border-gray-800/80 text-xs text-gray-400 flex justify-between items-center">
-                                <span class="group-hover:text-white transition">Ouvrir l'espace</span>
-                                <span class="text-blue-400 font-bold">→</span>
+                            <div style="border-top: 1px solid #1f2937; padding-top: 10px; display: flex; justify-content: space-between; font-size: 12px; color: #9ca3af;">
+                                <span>Ouvrir l'espace</span>
+                                <span style="color: #60a5fa; font-weight: bold;">→</span>
                             </div>
                         </div>
                     </template>
                 </div>
 
-                <!-- SYNCHRONISATION -->
-                <div class="bg-gray-900 border border-gray-800 p-5 sm:p-6 rounded-2xl shadow-lg space-y-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-purple-950/80 text-purple-400 border border-purple-900/50 flex items-center justify-center text-lg flex-shrink-0">
-                            🔄
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Synchronisation & Sauvegarde</h3>
-                            <p class="text-xs text-gray-400">Exportez ou importez vos fichiers de sauvegarde JSON.</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col sm:flex-row gap-3 pt-1">
-                        <button @click="exportData()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2.5 rounded-xl transition text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50">
-                            <span class="text-emerald-400">⬇️</span>
-                            <span>Exporter les données (JSON)</span>
-                        </button>
-                        <label class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2.5 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50">
-                            <span class="text-amber-400">⬆️</span>
-                            <span>Importer une sauvegarde</span>
-                            <input type="file" accept=".json" class="hidden" @change="importData($event)">
+                <!-- Synchronisation -->
+                <div style="background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; margin-top: 12px;">
+                    <h3 style="font-size: 15px; font-weight: 700; margin: 0 0 4px 0;">🔄 Synchronisation & Sauvegarde</h3>
+                    <p style="font-size: 12px; color: #9ca3af; margin: 0 0 16px 0;">Exportez ou importez vos projets sous format JSON.</p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary" @click="exportData()">⬇️ Exporter les données</button>
+                        <label class="btn-file">
+                            ⬆️ Importer une sauvegarde
+                            <input type="file" accept=".json" style="display: none;" @change="importData($event)">
                         </label>
                     </div>
                 </div>
             </div>
         </template>
 
-        <!-- 2. VUE DÉTAILLÉE DU PROJET -->
+        <!-- 2. VUE PROJET -->
         <template x-if="currentView === 'projectDetail' && currentProject">
-            <div class="space-y-6">
-                <!-- Fil d'Ariane -->
-                <div class="bg-gray-900 border border-gray-800 px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs text-gray-400 overflow-x-auto">
-                    <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
-                    <span class="text-gray-600">/</span>
-                    <span class="text-white font-medium whitespace-nowrap truncate max-w-[200px]" x-text="currentProject.title"></span>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="breadcrumb">
+                    <span @click="currentView = 'dashboard'">Accueil</span>
+                    <span>/</span>
+                    <span style="color: #fff; font-weight: 600;" x-text="currentProject.title"></span>
                 </div>
 
-                <!-- En-tête -->
-                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
-                    <div class="overflow-hidden">
-                        <h2 class="text-xl font-bold truncate text-white" x-text="currentProject.title"></h2>
-                        <p class="text-xs text-gray-400 capitalize mt-0.5" x-text="'Type : ' + formatType(currentProject.type)"></p>
+                <div class="card" style="min-height: auto;">
+                    <div class="flex-between">
+                        <div>
+                            <h2 style="font-size: 20px; font-weight: 700; margin: 0;" x-text="currentProject.title"></h2>
+                            <p style="font-size: 12px; color: #9ca3af; margin: 4px 0 0 0;" x-text="'Type : ' + formatType(currentProject.type)"></p>
+                        </div>
+                        <button @click="renameProject(currentProject)">Renommer</button>
                     </div>
-                    <button @click="renameProject(currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition border border-gray-700/50 whitespace-nowrap">
-                        Renommer
-                    </button>
                 </div>
 
                 <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
-                    <div class="space-y-4">
-                        <!-- Sélecteur de Saisons -->
-                        <div class="flex items-center space-x-2 overflow-x-auto pb-1">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <!-- Saisons -->
+                        <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
                             <template x-for="season in currentProject.seasons" :key="season.id">
                                 <button @click="activeSeasonId = season.id" 
-                                        class="px-4 py-2 rounded-xl text-xs font-semibold transition flex-shrink-0 border"
-                                        :class="activeSeasonId === season.id ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-600/20' : 'bg-gray-900 text-gray-400 border-gray-800 hover:text-white'"
+                                        :class="activeSeasonId === season.id ? 'btn-primary' : ''"
                                         x-text="'Saison ' + season.seasonNumber">
                                 </button>
                             </template>
-                            <button @click="addSeason(currentProject.id)" class="px-3.5 py-2 rounded-xl text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700/50 flex-shrink-0">
-                                + Saison
-                            </button>
+                            <button @click="addSeason(currentProject.id)">+ Saison</button>
                         </div>
 
-                        <!-- Contenu Saison -->
+                        <!-- Épisodes de la saison -->
                         <template x-if="getActiveSeason()">
-                            <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-4 shadow-md">
-                                <div class="flex justify-between items-center">
-                                    <h4 class="font-bold text-sm text-blue-400" x-text="'Saison ' + getActiveSeason().seasonNumber"></h4>
-                                    <div class="flex items-center space-x-2">
-                                        <button @click="deleteSeason(currentProject.id, getActiveSeason().id)" class="text-xs text-red-400 bg-red-950/60 border border-red-900/50 px-2.5 py-1.5 rounded-lg">Supprimer</button>
-                                        <button @click="addEpisode(currentProject.id, getActiveSeason().id)" class="text-xs bg-blue-950/60 text-blue-300 border border-blue-900/50 px-3 py-1.5 rounded-lg">+ Épisode</button>
+                            <div class="card" style="min-height: auto; gap: 16px;">
+                                <div class="flex-between">
+                                    <h4 style="font-size: 15px; font-weight: 700; color: #60a5fa; margin: 0;" x-text="'Saison ' + getActiveSeason().seasonNumber"></h4>
+                                    <div class="flex-align">
+                                        <button class="btn-danger" style="padding: 4px 8px; font-size: 11px;" @click="deleteSeason(currentProject.id, getActiveSeason().id)">Supprimer</button>
+                                        <button class="btn-primary" style="padding: 4px 10px; font-size: 11px;" @click="addEpisode(currentProject.id, getActiveSeason().id)">+ Épisode</button>
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                <div class="grid">
                                     <template x-for="episode in getActiveSeason().episodes" :key="episode.id">
-                                        <div class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-3.5 rounded-xl transition flex justify-between items-center">
-                                            <div @click="openEpisode(episode)" class="overflow-hidden pr-2 flex-1 cursor-pointer">
-                                                <span class="text-[10px] text-gray-500 block" x-text="'Épisode ' + episode.episodeNumber"></span>
-                                                <span class="font-semibold text-white text-xs block truncate" x-text="episode.title"></span>
+                                        <div style="background: #030712; border: 1px solid #1f2937; padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" @click="openEpisode(episode)">
+                                            <div>
+                                                <span style="font-size: 10px; color: #9ca3af;" x-text="'Épisode ' + episode.episodeNumber"></span>
+                                                <div style="font-weight: 600; font-size: 14px; color: #fff;" x-text="episode.title"></div>
                                             </div>
-                                            <div class="flex items-center space-x-2 flex-shrink-0">
-                                                <button @click="deleteEpisode(currentProject.id, getActiveSeason().id, episode.id)" class="text-gray-500 hover:text-red-400 text-xs p-1">🗑️</button>
-                                                <span @click="openEpisode(episode)" class="text-gray-600 cursor-pointer text-xs">➔</span>
+                                            <div class="flex-align">
+                                                <button class="btn-danger" style="padding: 2px 6px; font-size: 11px;" @click.stop="deleteEpisode(currentProject.id, getActiveSeason().id, episode.id)">🗑️</button>
+                                                <span style="color: #60a5fa;">→</span>
                                             </div>
                                         </div>
                                     </template>
@@ -193,108 +210,98 @@
                 </template>
 
                 <template x-if="currentProject.type === 'court_metrage' || currentProject.type === 'long_metrage'">
-                    <div>
-                        <div x-init="openMovieWorkspace(currentProject)"></div>
-                    </div>
+                    <div x-init="openMovieWorkspace(currentProject)"></div>
                 </template>
             </div>
         </template>
 
-        <!-- 3. ESPACE DE TRAVAIL DE L'ÉPISODE -->
+        <!-- 3. ESPACE ÉPISODE -->
         <template x-if="currentView === 'episodeDetail' && currentEpisode">
-            <div class="space-y-6">
-                <!-- Fil d'Ariane -->
-                <div class="bg-gray-900 border border-gray-800 px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs text-gray-400 overflow-x-auto">
-                    <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
-                    <span class="text-gray-600">/</span>
-                    <span class="cursor-pointer hover:text-white whitespace-nowrap truncate max-w-[100px]" @click="currentView = 'projectDetail'" x-text="currentProject.title"></span>
-                    <span class="text-gray-600">/</span>
-                    <span class="text-white font-medium whitespace-nowrap truncate max-w-[100px]" x-text="currentEpisode.title"></span>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="breadcrumb">
+                    <span @click="currentView = 'dashboard'">Accueil</span>
+                    <span>/</span>
+                    <span @click="currentView = 'projectDetail'" x-text="currentProject.title"></span>
+                    <span>/</span>
+                    <span style="color: #fff; font-weight: 600;" x-text="currentEpisode.title"></span>
                 </div>
 
-                <!-- En-tête -->
-                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
-                    <div class="overflow-hidden">
-                        <h2 class="text-xl font-bold truncate text-white" x-text="currentEpisode.title"></h2>
-                        <p class="text-xs text-gray-400 mt-0.5">Espace de travail : Script, Prompt et Rushes.</p>
-                    </div>
-                    <button @click="renameEpisode(currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition border border-gray-700/50 whitespace-nowrap">
-                        Renommer
-                    </button>
-                </div>
-
-                <!-- SCRIPT & PROMPT -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
-                        <div class="flex justify-between items-center">
-                            <label class="font-bold text-xs text-gray-300 uppercase tracking-wider">Script</label>
-                            <button @click="copyText(currentEpisode.script, 'script')" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
+                <div class="card" style="min-height: auto;">
+                    <div class="flex-between">
+                        <div>
+                            <h2 style="font-size: 20px; font-weight: 700; margin: 0;" x-text="currentEpisode.title"></h2>
+                            <p style="font-size: 12px; color: #9ca3af; margin: 4px 0 0 0;">Espace de travail : Script, Prompt et Rushes.</p>
                         </div>
-                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="10" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs focus:outline-none focus:border-blue-500 text-white leading-relaxed"></textarea>
-                    </div>
-
-                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
-                        <div class="flex justify-between items-center">
-                            <label class="font-bold text-xs text-gray-300 uppercase tracking-wider">Prompt</label>
-                            <button @click="copyText(currentEpisode.prompts, 'prompts')" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
-                        </div>
-                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="10" placeholder="Collez vos prompts ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs focus:outline-none focus:border-blue-500 text-white leading-relaxed"></textarea>
+                        <button @click="renameEpisode(currentEpisode)">Renommer</button>
                     </div>
                 </div>
 
-                <!-- MÉDIAS ORIGINAUX -->
-                <div class="bg-gray-900 border border-gray-800 p-5 sm:p-6 rounded-2xl space-y-4 shadow-lg">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-sm text-white">📁 Fichiers Originaux</h3>
-                        <label class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-4 py-2 rounded-xl cursor-pointer transition shadow-md shadow-blue-600/20">
+                <!-- Script & Prompt -->
+                <div class="grid">
+                    <div class="card" style="min-height: auto;">
+                        <div class="flex-between" style="margin-bottom: 8px;">
+                            <label style="font-weight: 700; font-size: 12px; color: #9ca3af; text-transform: uppercase;">Script</label>
+                            <button style="padding: 2px 8px; font-size: 11px;" @click="copyText(currentEpisode.script, 'script')" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
+                        </div>
+                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="8" placeholder="Écrivez votre script ici..."></textarea>
+                    </div>
+
+                    <div class="card" style="min-height: auto;">
+                        <div class="flex-between" style="margin-bottom: 8px;">
+                            <label style="font-weight: 700; font-size: 12px; color: #9ca3af; text-transform: uppercase;">Prompt</label>
+                            <button style="padding: 2px 8px; font-size: 11px;" @click="copyText(currentEpisode.prompts, 'prompts')" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
+                        </div>
+                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="8" placeholder="Écrivez vos prompts ici..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Fichiers Originaux -->
+                <div class="card" style="min-height: auto;">
+                    <div class="flex-between" style="margin-bottom: 12px;">
+                        <h3 style="font-size: 15px; font-weight: 700; margin: 0;">📁 Fichiers Originaux</h3>
+                        <label class="btn-primary" style="padding: 6px 12px; font-size: 12px;">
                             + Ajouter
-                            <input type="file" class="hidden" @change="addMedia($event, 'original')">
+                            <input type="file" style="display: none;" @change="addMedia($event, 'original')">
                         </label>
                     </div>
-
-                    <div class="space-y-2.5">
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
                         <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'original')" :key="media.id">
-                            <div class="bg-gray-950 border border-gray-800 p-3.5 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
-                                <div class="flex items-center space-x-2.5 overflow-hidden w-full sm:w-auto">
-                                    <span class="text-base flex-shrink-0" x-text="mediaIcon(media.type)"></span>
-                                    <span class="font-medium text-white truncate max-w-[200px]" x-text="media.name"></span>
-                                </div>
-                                <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-                                    <button @click="previewMedia(media)" class="text-blue-300 bg-blue-950/80 border border-blue-900/50 px-3 py-1.5 rounded-lg font-medium">Lire ▶️</button>
-                                    <a :href="media.url" :download="media.name" class="text-gray-300 bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg">Télécharger</a>
-                                    <button @click="deleteMedia(media.id)" class="text-red-400 bg-red-950/60 border border-red-900/50 px-2.5 py-1.5 rounded-lg">✕</button>
+                            <div style="background: #030712; border: 1px solid #1f2937; padding: 10px 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                                <span style="font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50%;" x-text="media.name"></span>
+                                <div class="flex-align">
+                                    <button class="btn-primary" style="padding: 4px 8px; font-size: 11px;" @click="previewMedia(media)">Lire ▶️</button>
+                                    <a :href="media.url" :download="media.name" style="background:#1f2937; color:#fff; padding:4px 8px; border-radius:8px; text-decoration:none; font-size:11px;">Sauver</a>
+                                    <button class="btn-danger" style="padding: 4px 8px; font-size: 11px;" @click="deleteMedia(media.id)">✕</button>
                                 </div>
                             </div>
                         </template>
                         <template x-if="currentEpisode.mediaAssets.filter(m => m.format === 'original').length === 0">
-                            <p class="text-gray-500 text-xs py-1">Aucun fichier original.</p>
+                            <p style="font-size: 12px; color: #6b7280; margin: 0;">Aucun fichier original.</p>
                         </template>
                     </div>
                 </div>
 
-                <!-- FORMATS RÉSEAUX SOCIAUX -->
-                <div class="bg-gray-900 border border-gray-800 p-5 sm:p-6 rounded-2xl space-y-4 shadow-lg">
-                    <h3 class="font-bold text-sm text-white">📱 Formats Réseaux Sociaux</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Formats Réseaux Sociaux -->
+                <div class="card" style="min-height: auto;">
+                    <h3 style="font-size: 15px; font-weight: 700; margin: 0 0 12px 0;">📱 Formats Réseaux Sociaux</h3>
+                    <div class="grid">
                         <template x-for="fmt in ['youtube', 'youtube_shorts', 'tiktok', 'instagram', 'facebook']">
-                            <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-xs text-blue-400 capitalize" x-text="fmt.replace('_', ' ')"></span>
-                                    <label class="text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg cursor-pointer">
+                            <div style="background: #030712; border: 1px solid #1f2937; padding: 14px; border-radius: 12px; display: flex; flex-direction: column; gap: 10px;">
+                                <div class="flex-between">
+                                    <span style="font-weight: 700; font-size: 13px; color: #60a5fa; text-transform: capitalize;" x-text="fmt.replace('_', ' ')"></span>
+                                    <label style="background: #1f2937; padding: 3px 8px; font-size: 11px; border-radius: 6px; cursor: pointer;">
                                         + Ajouter
-                                        <input type="file" class="hidden" @change="addMedia($event, fmt)">
+                                        <input type="file" style="display: none;" @change="addMedia($event, fmt)">
                                     </label>
                                 </div>
-                                <div class="space-y-2">
+                                <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === fmt)" :key="media.id">
-                                        <div class="bg-gray-900 p-2.5 rounded-xl flex flex-col space-y-2 text-[11px] border border-gray-800">
-                                            <div class="flex justify-between items-center">
-                                                <span class="font-medium text-white truncate max-w-[150px]" x-text="media.name"></span>
-                                                <button @click="deleteMedia(media.id)" class="text-red-400">✕</button>
-                                            </div>
-                                            <div class="flex space-x-2 pt-1 border-t border-gray-800">
-                                                <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950/80 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
-                                                <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center">Sauver</a>
+                                        <div style="background: #111827; padding: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50%;" x-text="media.name"></span>
+                                            <div class="flex-align">
+                                                <button class="btn-primary" style="padding: 2px 6px; font-size: 10px;" @click="previewMedia(media)">Lire</button>
+                                                <a :href="media.url" :download="media.name" style="background:#374151; color:#fff; padding:2px 6px; border-radius:6px; text-decoration:none; font-size:10px;">Sauver</a>
+                                                <button class="btn-danger" style="padding: 2px 6px; font-size: 10px;" @click="deleteMedia(media.id)">✕</button>
                                             </div>
                                         </div>
                                     </template>
@@ -309,28 +316,25 @@
 
     <!-- MODALE LECTEUR -->
     <template x-if="showPreviewModal && previewMediaItem">
-        <div class="fixed inset-0 bg-gray-950/90 backdrop-blur-md flex items-center justify-center p-4 z-50">
-            <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                <div class="flex justify-between items-center px-5 py-4 bg-gray-950 border-b border-gray-800">
-                    <div class="flex items-center space-x-2.5 overflow-hidden">
-                        <span class="text-xl" x-text="mediaIcon(previewMediaItem.type)"></span>
-                        <h3 class="font-bold text-sm text-white truncate" x-text="previewMediaItem.name"></h3>
-                    </div>
-                    <button @click="closePreview()" class="w-8 h-8 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full flex items-center justify-center text-xs">✕</button>
+        <div class="modal-overlay">
+            <div class="modal-box" style="max-width: 600px;">
+                <div class="flex-between" style="margin-bottom: 12px;">
+                    <h3 style="font-size: 15px; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="previewMediaItem.name"></h3>
+                    <button @click="closePreview()" style="padding: 4px 8px;">✕</button>
                 </div>
-                <div class="flex-1 flex items-center justify-center bg-gray-950 p-4 max-h-[60vh] overflow-hidden">
+                <div style="background: #030712; border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: center; min-height: 250px; max-height: 60vh; overflow: hidden;">
                     <template x-if="previewMediaItem.type === 'video'">
-                        <video :src="previewMediaItem.url" controls autoplay playsinline class="max-h-[55vh] rounded-xl border border-gray-800"></video>
+                        <video :src="previewMediaItem.url" controls autoplay playsinline style="max-width: 100%; max-height: 50vh; border-radius: 8px;"></video>
                     </template>
                     <template x-if="previewMediaItem.type === 'audio'">
-                        <audio :src="previewMediaItem.url" controls autoplay class="w-full"></audio>
+                        <audio :src="previewMediaItem.url" controls autoplay style="width: 100%;"></audio>
                     </template>
                     <template x-if="previewMediaItem.type === 'image'">
-                        <img :src="previewMediaItem.url" class="max-w-full max-h-[55vh] object-contain rounded-xl border border-gray-800">
+                        <img :src="previewMediaItem.url" style="max-width: 100%; max-height: 50vh; object-fit: contain; border-radius: 8px;">
                     </template>
                 </div>
-                <div class="flex justify-end px-5 py-4 bg-gray-950 border-t border-gray-800">
-                    <button @click="closePreview()" class="px-4 py-2 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl">Fermer</button>
+                <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                    <button @click="closePreview()">Fermer</button>
                 </div>
             </div>
         </div>
@@ -338,34 +342,34 @@
 
     <!-- MODALE CRÉATION PROJET -->
     <template x-if="showNewProjectModal">
-        <div class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div class="bg-gray-900 border border-gray-800 p-6 rounded-3xl w-full max-w-md space-y-4 shadow-2xl">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-white">Nouveau Projet</h3>
-                    <button @click="showNewProjectModal = false" class="text-gray-400 hover:text-white">✕</button>
+        <div class="modal-overlay">
+            <div class="modal-box">
+                <div class="flex-between" style="margin-bottom: 16px;">
+                    <h3 style="font-size: 18px; font-weight: 700; margin: 0;">Nouveau Projet</h3>
+                    <button @click="showNewProjectModal = false" style="padding: 4px 8px;">✕</button>
                 </div>
-                <div class="space-y-1.5">
-                    <label class="text-xs font-medium text-gray-400">Titre du projet</label>
-                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Film" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-blue-500">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; color: #9ca3af; font-weight: 600;">Titre du projet</label>
+                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Film">
                 </div>
-                <div class="space-y-1.5">
-                    <label class="text-xs font-medium text-gray-400">Type de projet</label>
-                    <select x-model="newProjectType" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-blue-500">
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 12px; color: #9ca3af; font-weight: 600;">Type de projet</label>
+                    <select x-model="newProjectType">
                         <option value="serie">Série entière</option>
                         <option value="mini_serie">Mini-série</option>
                         <option value="court_metrage">Court-métrage</option>
                         <option value="long_metrage">Long-métrage</option>
                     </select>
                 </div>
-                <div class="flex justify-end space-x-2.5 pt-2">
-                    <button @click="showNewProjectModal = false" class="px-4 py-2 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl">Annuler</button>
-                    <button @click="createProject()" class="px-5 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-md">Créer</button>
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                    <button @click="showNewProjectModal = false">Annuler</button>
+                    <button class="btn-primary" @click="createProject()">Créer le projet</button>
                 </div>
             </div>
         </div>
     </template>
 
-    <!-- JAVASCRIPT -->
+    <!-- SCRIPT ALPINE -->
     <script>
         function appData() {
             return {
@@ -386,7 +390,7 @@
                 touchStartY: 0,
 
                 initApp() {
-                    setTimeout(() => { this.isLoading = false; }, 800);
+                    setTimeout(() => { this.isLoading = false; }, 600);
 
                     window.addEventListener('touchstart', (e) => {
                         this.touchStartX = e.touches[0].clientX;
@@ -458,7 +462,7 @@
                     if (!this.newProjectTitle.trim()) return;
                     const newProj = {
                         id: Date.now().toString(),
-                        title: this.newProjectTitle,
+                        title: this.newProjectTitle.trim(),
                         type: this.newProjectType,
                         seasons: []
                     };
@@ -469,7 +473,7 @@
                         episodes: [{
                             id: 'e_' + Date.now(),
                             episodeNumber: 1,
-                            title: isFilm ? this.newProjectTitle : 'Épisode 1',
+                            title: isFilm ? newProj.title : 'Épisode 1',
                             script: '', prompts: '', mediaAssets: []
                         }]
                     });
@@ -480,14 +484,14 @@
                 },
 
                 deleteProject(id) {
-                    if (confirm('Supprimer ce projet ?')) {
+                    if (confirm('Voulez-vous vraiment supprimer ce projet ?')) {
                         this.projects = this.projects.filter(p => p.id !== id);
                         this.saveData();
                     }
                 },
 
                 renameProject(project) {
-                    const newTitle = prompt("Nouveau nom :", project.title);
+                    const newTitle = prompt("Nouveau nom du projet :", project.title);
                     if (newTitle && newTitle.trim()) {
                         project.title = newTitle.trim();
                         this.saveData();
@@ -495,7 +499,7 @@
                 },
 
                 renameEpisode(episode) {
-                    const newTitle = prompt("Nouveau nom :", episode.title);
+                    const newTitle = prompt("Nouveau nom de l'épisode :", episode.title);
                     if (newTitle && newTitle.trim()) {
                         episode.title = newTitle.trim();
                         this.saveData();
