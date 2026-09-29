@@ -94,7 +94,6 @@
                 </div>
 
                 <div class="grid-cards">
-                    <!-- Nouveau Projet -->
                     <div class="card card-hover" @click="showNewProjectModal = true" style="border: 2px dashed #2563eb50; align-items: center; justify-content: center; text-align: center; background: rgba(37, 99, 235, 0.02); min-height: 160px; cursor: pointer;">
                         <div style="width: 48px; height: 48px; background: #2563eb; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(37,99,235,0.4);">+</div>
                         <div>
@@ -103,7 +102,6 @@
                         </div>
                     </div>
 
-                    <!-- Projets existants -->
                     <template x-for="project in projects" :key="project.id">
                         <div class="card card-hover" @click="openProject(project)" style="min-height: 160px; cursor: pointer;">
                             <div class="flex-between">
@@ -129,7 +127,6 @@
                     </template>
                 </div>
 
-                <!-- Sauvegarde -->
                 <div class="card" style="margin-top: 8px;">
                     <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px 0; color: #fff;">🔄 Synchronisation & Sauvegarde</h3>
                     <p style="font-size: 13px; color: #9ca3af; margin: 0 0 16px 0;">Exportez ou importez vos projets et médias sous format JSON.</p>
@@ -187,7 +184,7 @@
 
                                 <div class="grid-cards">
                                     <template x-for="episode in getActiveSeason().episodes" :key="episode.id">
-                                        <div style="background: #030712; border: 1px solid #1f2937; padding: 14px 18px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: border-color 0.2s;" class="card-hover" @click="openEpisode(episode)">
+                                        <div style="background: #030712; border: 1px solid #1f2937; padding: 14px 18px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" class="card-hover" @click="openEpisode(episode)">
                                             <div>
                                                 <span style="font-size: 11px; color: #9ca3af;" x-text="'Épisode ' + episode.episodeNumber"></span>
                                                 <div style="font-weight: 700; font-size: 15px; color: #fff; margin-top: 2px;" x-text="episode.title"></div>
@@ -234,7 +231,7 @@
                 <div class="grid-cards" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
                     <div class="card">
                         <div class="flex-between" style="margin-bottom: 10px;">
-                            <label style="font-weight: 700; font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">Script</label>
+                            <label style="font-weight: 700; font-size: 12px; color: #9ca3af; text-transform: uppercase;">Script</label>
                             <button style="padding: 4px 10px; font-size: 12px;" @click="copyText(currentEpisode.script, 'script')" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
                         </div>
                         <textarea x-model="currentEpisode.script" @input="saveData()" rows="8" placeholder="Écrivez ou collez votre script ici..."></textarea>
@@ -242,7 +239,7 @@
 
                     <div class="card">
                         <div class="flex-between" style="margin-bottom: 10px;">
-                            <label style="font-weight: 700; font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;">Prompt</label>
+                            <label style="font-weight: 700; font-size: 12px; color: #9ca3af; text-transform: uppercase;">Prompt</label>
                             <button style="padding: 4px 10px; font-size: 12px;" @click="copyText(currentEpisode.prompts, 'prompts')" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
                         </div>
                         <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="8" placeholder="Écrivez ou collez vos prompts ici..."></textarea>
@@ -261,12 +258,12 @@
                     <div style="display: flex; flex-direction: column; gap: 10px;">
                         <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'original')" :key="media.id">
                             <div style="background: #030712; border: 1px solid #1f2937; padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
-                                <div class="flex-align" style="overflow: hidden; pr: 10px;">
+                                <div class="flex-align" style="overflow: hidden;">
                                     <span style="font-size: 16px;" x-text="mediaIcon(media.type)"></span>
-                                    <span style="font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px;" x-text="media.name"></span>
+                                    <span style="font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;" x-text="media.name"></span>
                                 </div>
                                 <div class="flex-align">
-                                    <button class="btn-primary" style="padding: 5px 10px; font-size: 11px;" @click="previewMedia(media)">Lire ▶️</button>
+                                    <button class="btn-primary" style="padding: 5px 10px; font-size: 11px;" @click="previewMedia(media)">Voir ▶️</button>
                                     <a :href="media.url" :download="media.name" style="background:#1f2937; color:#fff; padding:5px 10px; border-radius:8px; text-decoration:none; font-size:11px; font-weight:600; border:1px solid #374151;">Sauver</a>
                                     <button class="btn-danger" style="padding: 5px 8px; font-size: 11px;" @click="deleteMedia(media.id)">✕</button>
                                 </div>
@@ -294,9 +291,9 @@
                                 <div style="display: flex; flex-direction: column; gap: 8px;">
                                     <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === fmt)" :key="media.id">
                                         <div style="background: #111827; border: 1px solid #1f2937; padding: 10px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-                                            <span style="font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;" x-text="media.name"></span>
+                                            <span style="font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px;" x-text="media.name"></span>
                                             <div class="flex-align">
-                                                <button class="btn-primary" style="padding: 3px 8px; font-size: 10px;" @click="previewMedia(media)">Lire</button>
+                                                <button class="btn-primary" style="padding: 3px 8px; font-size: 10px;" @click="previewMedia(media)">Voir</button>
                                                 <a :href="media.url" :download="media.name" style="background:#374151; color:#fff; padding:3px 8px; border-radius:6px; text-decoration:none; font-size:10px;">Sauver</a>
                                                 <button class="btn-danger" style="padding: 3px 6px; font-size: 10px;" @click="deleteMedia(media.id)">✕</button>
                                             </div>
@@ -314,14 +311,14 @@
         </template>
     </main>
 
-    <!-- MODALE LECTEUR (RATIO ADAPTÉ ET PROPRE) -->
+    <!-- MODALE LECTEUR MEDIA UNIVERSEL -->
     <template x-if="showPreviewModal && previewMediaItem">
         <div class="modal-overlay">
             <div class="modal-box" style="max-width: 650px;">
                 <div class="flex-between" style="margin-bottom: 16px;">
                     <div>
-                        <h3 style="font-size: 16px; font-weight: 700; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 360px;" x-text="previewMediaItem.name"></h3>
-                        <span style="font-size: 11px; color: #60a5fa; text-transform: uppercase; font-weight: 600;" x-text="'Format cible : ' + previewMediaItem.format.replace('_', ' ')"></span>
+                        <h3 style="font-size: 16px; font-weight: 700; margin: 0; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 340px;" x-text="previewMediaItem.name"></h3>
+                        <span style="font-size: 11px; color: #60a5fa; text-transform: uppercase; font-weight: 600;" x-text="'Aperçu format : ' + previewMediaItem.format.replace('_', ' ')"></span>
                     </div>
                     <button @click="closePreview()" style="padding: 6px 12px; font-size: 12px;">✕ Fermer</button>
                 </div>
@@ -332,12 +329,18 @@
                          'ratio-vertical': ['youtube_shorts', 'tiktok', 'instagram'].includes(previewMediaItem.format),
                          'ratio-original': previewMediaItem.format === 'original'
                      }">
+                    
+                    <!-- Vidéo -->
                     <template x-if="previewMediaItem.type === 'video'">
                         <video :src="previewMediaItem.url" controls autoplay playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
                     </template>
+                    
+                    <!-- Audio -->
                     <template x-if="previewMediaItem.type === 'audio'">
                         <audio :src="previewMediaItem.url" controls autoplay style="width: 90%;"></audio>
                     </template>
+                    
+                    <!-- Image -->
                     <template x-if="previewMediaItem.type === 'image'">
                         <img :src="previewMediaItem.url" style="width: 100%; height: 100%; object-fit: contain;">
                     </template>
@@ -399,7 +402,7 @@
                 touchStartY: 0,
 
                 initApp() {
-                    setTimeout(() => { this.isLoading = false; }, 500);
+                    setTimeout(() => { this.isLoading = false; }, 400);
 
                     window.addEventListener('touchstart', (e) => {
                         this.touchStartX = e.touches[0].clientX;
@@ -593,9 +596,15 @@
                 addMedia(event, format) {
                     const file = event.target.files[0];
                     if (!file) return;
+
                     let type = 'video';
-                    if (file.type.includes('audio')) type = 'audio';
-                    else if (file.type.includes('image')) type = 'image';
+                    if (file.type.includes('audio')) {
+                        type = 'audio';
+                    } else if (file.type.includes('image') || file.name.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
+                        type = 'image';
+                    } else {
+                        type = 'video';
+                    }
 
                     const reader = new FileReader();
                     reader.onload = (e) => {
