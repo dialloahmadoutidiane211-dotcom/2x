@@ -146,7 +146,7 @@
                         <h2 class="text-xl sm:text-2xl font-bold truncate" x-text="currentProject.title"></h2>
                         <p class="text-xs text-gray-400 capitalize mt-0.5" x-text="'Type : ' + formatType(currentProject.type)"></p>
                     </div>
-                    <button @click="openRenameModal('project', currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
+                    <button @click="renameProject(currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
                         Modifier le nom
                     </button>
                 </div>
@@ -229,7 +229,7 @@
                         <h2 class="text-xl sm:text-2xl font-bold truncate" x-text="currentEpisode.title"></h2>
                         <p class="text-xs text-gray-400 mt-0.5">Espace de travail : Script, Prompt et Rushes.</p>
                     </div>
-                    <button @click="openRenameModal('episode', currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
+                    <button @click="renameEpisode(currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
                         Modifier le nom
                     </button>
                 </div>
@@ -508,28 +508,6 @@
         </div>
     </template>
 
-    <!-- MODALE : RENOMMER (PROJET OU ÉPISODE) SANS URL NAVIGATEUR -->
-    <template x-if="showRenameModal">
-        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div class="bg-gray-900 border border-gray-800 p-6 rounded-3xl w-full max-w-md space-y-5 shadow-2xl">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold" x-text="renameType === 'project' ? 'Modifier le nom du projet' : 'Modifier le nom de l\'épisode'"></h3>
-                    <button @click="showRenameModal = false" class="text-gray-400 hover:text-white">✕</button>
-                </div>
-                
-                <div class="space-y-1.5">
-                    <label class="text-xs font-medium text-gray-400">Nouveau nom</label>
-                    <input type="text" x-model="renameInputVal" @keyup.enter="confirmRename()" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 text-white" autofocus>
-                </div>
-
-                <div class="flex justify-end space-x-3 pt-2">
-                    <button @click="showRenameModal = false" class="px-4 py-2.5 text-xs font-semibold bg-gray-800 hover:bg-gray-700 rounded-xl transition text-gray-300">Annuler</button>
-                    <button @click="confirmRename()" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 rounded-xl text-white transition shadow-lg shadow-blue-600/20">Enregistrer</button>
-                </div>
-            </div>
-        </div>
-    </template>
-
     <!-- LOGIQUE JAVASCRIPT (ALPINE.JS) -->
     <script>
         function appData() {
@@ -543,13 +521,6 @@
                 showNewProjectModal: false,
                 newProjectTitle: '',
                 newProjectType: 'serie',
-                
-                // État de la modale de renommage personnalisée
-                showRenameModal: false,
-                renameType: '', // 'project' ou 'episode'
-                renameTarget: null,
-                renameInputVal: '',
-
                 copiedScript: false,
                 copiedPrompts: false,
                 showPreviewModal: false,
@@ -690,20 +661,20 @@
                     }
                 },
 
-                openRenameModal(type, target) {
-                    this.renameType = type;
-                    this.renameTarget = target;
-                    this.renameInputVal = target.title;
-                    this.showRenameModal = true;
-                },
-
-                confirmRename() {
-                    if (this.renameInputVal && this.renameInputVal.trim()) {
-                        this.renameTarget.title = this.renameInputVal.trim();
+                renameProject(project) {
+                    const newTitle = prompt("Nouveau nom pour le projet :", project.title);
+                    if (newTitle && newTitle.trim()) {
+                        project.title = newTitle.trim();
                         this.saveData();
                     }
-                    this.showRenameModal = false;
-                    this.renameTarget = null;
+                },
+
+                renameEpisode(episode) {
+                    const newTitle = prompt("Nouveau nom pour l'épisode :", episode.title);
+                    if (newTitle && newTitle.trim()) {
+                        episode.title = newTitle.trim();
+                        this.saveData();
+                    }
                 },
 
                 deleteSeason(projectId, seasonId) {
