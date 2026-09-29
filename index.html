@@ -8,145 +8,10 @@
     <!-- Icône personnalisée pour l'écran d'accueil iOS -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%232563eb%22/><text y=%2270%22 x=%2222%22 font-size=%2255%22>🎬</text></svg>">
     
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js pour la réactivité -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    <!-- STYLE CSS NATIF INTÉGRÉ (100% stable, aucun blocage réseau mobile) -->
-    <style>
-        body { background-color: #030712; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; }
-        .bg-gray-950 { background-color: #030712; }
-        .bg-gray-900 { background-color: #111827; }
-        .bg-gray-800 { background-color: #1f2937; }
-        .bg-blue-600 { background-color: #2563eb; }
-        .bg-blue-950 { background-color: #172554; }
-        .bg-purple-950 { background-color: #3b0764; }
-        .bg-red-950 { background-color: #450a0a; }
-        .bg-green-950 { background-color: #052e16; }
-        .bg-amber-950 { background-color: #451a03; }
-        .text-gray-100 { color: #f3f4f6; }
-        .text-gray-200 { color: #e5e7eb; }
-        .text-gray-300 { color: #d1d5db; }
-        .text-gray-400 { color: #9ca3af; }
-        .text-gray-500 { color: #6b7280; }
-        .text-gray-600 { color: #4b5563; }
-        .text-white { color: #ffffff; }
-        .text-blue-300 { color: #93c5fd; }
-        .text-blue-400 { color: #60a5fa; }
-        .text-purple-300 { color: #d8b4fe; }
-        .text-purple-400 { color: #c084fc; }
-        .text-green-300 { color: #86efac; }
-        .text-amber-300 { color: #fde047; }
-        .text-red-400 { color: #f87171; }
-        .text-pink-400 { color: #f472b6; }
-        .text-emerald-400 { color: #34d399; }
-        .text-amber-400 { color: #fbbf24; }
-
-        .flex { display: flex; }
-        .hidden { display: none; }
-        .grid { display: grid; }
-        .flex-col { flex-direction: column; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .justify-center { justify-content: center; }
-        .justify-end { justify-content: flex-end; }
-        .flex-wrap { flex-wrap: wrap; }
-        .flex-shrink-0 { flex-shrink: 0; }
-        .flex-1 { flex: 1 1 0%; }
-
-        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-        @media (min-width: 640px) {
-            .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .sm\:flex-row { flex-direction: row; }
-            .sm\:col-span-2 { grid-column: span 2 / span 2; }
-            .sm\:text-sm { font-size: 0.875rem; }
-            .sm\:text-2xl { font-size: 1.5rem; }
-        }
-        @media (min-width: 1024px) {
-            .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-            .lg\:col-span-1 { grid-column: span 1 / span 1; }
-        }
-
-        .p-3 { padding: 0.75rem; }
-        .p-3\.5 { padding: 0.875rem; }
-        .p-4 { padding: 1rem; }
-        .p-5 { padding: 1.25rem; }
-        .p-6 { padding: 1.5rem; }
-        .p-8 { padding: 2rem; }
-        .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
-        .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
-        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
-        .px-3\.5 { padding-left: 0.875rem; padding-right: 0.875rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
-        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
-        .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
-        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
-        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-        
-        .space-y-1\.5 > * + * { margin-top: 0.375rem; }
-        .space-y-2 > * + * { margin-top: 0.5rem; }
-        .space-y-3 > * + * { margin-top: 0.75rem; }
-        .space-y-4 > * + * { margin-top: 1rem; }
-        .space-y-5 > * + * { margin-top: 1.25rem; }
-        .space-y-6 > * + * { margin-top: 1.5rem; }
-        .space-x-1\.5 > * + * { margin-left: 0.375rem; }
-        .space-x-2 > * + * { margin-left: 0.5rem; }
-        .space-x-2\.5 > * + * { margin-left: 0.625rem; }
-        .space-x-3 > * + * { margin-left: 0.75rem; }
-        
-        .gap-1\.5 { gap: 0.375rem; }
-        .gap-2 { gap: 0.5rem; }
-        .gap-3 { gap: 0.75rem; }
-        .gap-4 { gap: 1rem; }
-        .gap-6 { gap: 1.5rem; }
-
-        .rounded-xl { border-radius: 0.75rem; }
-        .rounded-2xl { border-radius: 1rem; }
-        .rounded-3xl { border-radius: 1.5rem; }
-        .rounded-full { border-radius: 9999px; }
-        .border { border-width: 1px; border-style: solid; border-color: #1f2937; }
-        .border-gray-800 { border-color: #1f2937; }
-        .border-blue-500\/40 { border-color: rgba(59, 130, 246, 0.4); }
-        .border-blue-700\/50 { border-color: rgba(29, 78, 216, 0.5); }
-        .border-purple-700\/50 { border-color: rgba(126, 34, 206, 0.5); }
-        .border-green-700\/50 { border-color: rgba(21, 128, 61, 0.5); }
-        .border-amber-700\/50 { border-color: rgba(180, 83, 9, 0.5); }
-
-        .text-xs { font-size: 0.75rem; }
-        .text-sm { font-size: 0.875rem; }
-        .text-base { font-size: 1rem; }
-        .text-lg { font-size: 1.125rem; }
-        .text-xl { font-size: 1.25rem; }
-        .text-2xl { font-size: 1.5rem; }
-        .font-bold { font-weight: 700; }
-        .font-extrabold { font-weight: 800; }
-        .font-semibold { font-weight: 600; }
-        .font-medium { font-weight: 500; }
-        .uppercase { text-transform: uppercase; }
-        .capitalize { text-transform: capitalize; }
-        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .cursor-pointer { cursor: pointer; }
-        .sticky { position: sticky; }
-        .top-0 { top: 0px; }
-        .z-40 { z-index: 40; }
-        .z-50 { z-index: 50; }
-        .fixed { position: fixed; }
-        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
-        .w-full { width: 100%; }
-        .max-w-6xl { max-width: 72rem; margin-left: auto; margin-right: auto; }
-        .max-w-md { max-width: 28rem; }
-        .max-w-3xl { max-width: 48rem; }
-        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-        .backdrop-blur-md { backdrop-filter: blur(12px); }
-        .overflow-x-auto { overflow-x: auto; }
-        .overflow-hidden { overflow: hidden; }
-        .transition { transition: all 0.2s ease; }
-        textarea, select, input { color-scheme: dark; }
-    </style>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen font-sans overflow-x-hidden" x-data="appData()" x-init="initApp()">
 
@@ -155,15 +20,16 @@
          x-transition:leave="transition ease-out duration-700"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-105"
-         class="fixed inset-0 z-50 bg-gray-950 flex flex-col items-center justify-center space-y-6">
+         class="fixed inset-0 z-50 bg-gradient-to-b from-gray-950 via-gray-900 to-black flex flex-col items-center justify-center space-y-6">
         <div class="relative flex items-center justify-center">
-            <div class="absolute w-36 h-36 bg-blue-600/30 rounded-full"></div>
-            <div class="relative w-24 h-24 bg-blue-600 rounded-3xl flex items-center justify-center shadow-2xl">
-                <span class="text-4xl">🎬</span>
+            <div class="absolute w-36 h-36 bg-blue-600/30 rounded-full animate-ping"></div>
+            <div class="absolute w-28 h-28 bg-purple-600/20 rounded-full animate-pulse"></div>
+            <div class="relative w-24 h-24 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/50 transform hover:scale-105 transition">
+                <span class="text-4xl animate-bounce">🎬</span>
             </div>
         </div>
         <div class="text-center space-y-2">
-            <h2 class="text-2xl font-extrabold tracking-widest uppercase text-blue-400">
+            <h2 class="text-2xl font-extrabold tracking-widest uppercase bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-500 bg-clip-text text-transparent">
                 VMax Studio
             </h2>
             <p class="text-xs text-gray-400 tracking-widest uppercase">Moteur, ça tourne...</p>
@@ -171,14 +37,16 @@
     </div>
 
     <!-- HEADER / NAVIGATION -->
-    <header class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800 p-4 sticky top-0 z-40 shadow-md">
+    <header class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800/80 p-4 sticky top-0 z-40 shadow-md">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-extrabold text-blue-400 cursor-pointer flex items-center space-x-2" @click="currentView = 'dashboard'">
+            <h1 class="text-xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent cursor-pointer flex items-center space-x-2" @click="currentView = 'dashboard'">
                 <span>🎬</span><span>VMax</span>
             </h1>
             <div class="flex items-center space-x-2">
+                <!-- Bouton Actualiser -->
                 <button @click="window.location.reload()" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition shadow-sm flex items-center space-x-1.5" title="Actualiser l'application">
-                    <span>🔄 Actualiser</span>
+                    <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span>Actualiser</span>
                 </button>
                 <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition shadow-sm">
                     Accueil
@@ -200,26 +68,26 @@
 
                 <!-- Grille des Projets + Carte "Nouveau Projet" -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div @click="showNewProjectModal = true" class="bg-gray-900 border border-blue-500/40 p-6 rounded-2xl cursor-pointer transition shadow-xl flex flex-col items-center justify-center text-center space-y-3 min-h-[160px]">
-                        <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl shadow-lg">
+                    <div @click="showNewProjectModal = true" class="bg-gradient-to-br from-blue-950/40 via-gray-900 to-purple-950/40 border border-blue-500/40 hover:border-blue-500/80 p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-xl flex flex-col items-center justify-center text-center space-y-3 min-h-[160px] group">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
                             +
                         </div>
                         <div>
-                            <span class="font-bold text-base text-white">Nouveau Projet</span>
+                            <span class="font-bold text-base text-white group-hover:text-blue-400 transition-colors">Nouveau Projet</span>
                             <p class="text-xs text-gray-400 mt-0.5">Créer une série, mini-série ou film</p>
                         </div>
                     </div>
 
                     <template x-for="project in projects" :key="project.id">
-                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 p-5 rounded-2xl cursor-pointer transition shadow-sm flex flex-col justify-between min-h-[160px]">
+                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-blue-500/50 p-5 rounded-2xl cursor-pointer transition shadow-sm hover:shadow-md flex flex-col justify-between min-h-[160px]">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
-                                    <span class="text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full border border-gray-800"
+                                    <span class="text-xs uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full"
                                         :class="{
-                                            'bg-purple-950 text-purple-300': project.type === 'serie',
-                                            'bg-blue-950 text-blue-300': project.type === 'mini_serie',
-                                            'bg-green-950 text-green-300': project.type === 'court_metrage',
-                                            'bg-amber-950 text-amber-300': project.type === 'long_metrage'
+                                            'bg-purple-900/50 text-purple-300 border border-purple-700/50': project.type === 'serie',
+                                            'bg-blue-900/50 text-blue-300 border border-blue-700/50': project.type === 'mini_serie',
+                                            'bg-green-900/50 text-green-300 border border-green-700/50': project.type === 'court_metrage',
+                                            'bg-amber-900/50 text-amber-300 border border-amber-700/50': project.type === 'long_metrage'
                                         }"
                                         x-text="formatType(project.type)">
                                     </span>
@@ -238,21 +106,21 @@
                 <!-- SECTION BASSE : SYNCHRONISATION & SAUVEGARDE -->
                 <div class="mt-8 bg-gray-900 border border-gray-800 p-6 rounded-3xl shadow-xl space-y-4">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-purple-950 text-purple-400 flex items-center justify-center text-lg flex-shrink-0">
+                        <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-lg flex-shrink-0">
                             🔄
                         </div>
                         <div>
                             <h3 class="font-bold text-base text-white">Synchronisation & Sauvegarde</h3>
-                            <p class="text-xs text-gray-400">Exportez ou importez vos données JSON (textes, scripts et médias intégrés).</p>
+                            <p class="text-xs text-gray-400">Exportez ou importez vos données JSON pour synchroniser vos projets sur tous vos appareils.</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                        <button @click="exportData()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-800 shadow-sm">
-                            <span class="text-emerald-400">⬇️</span>
+                        <button @click="exportData()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50 shadow-sm">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                             <span>Exporter les données (JSON)</span>
                         </button>
-                        <label class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-800 shadow-sm">
-                            <span class="text-amber-400">⬆️</span>
+                        <label class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-3 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50 shadow-sm">
+                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             <span>Importer une sauvegarde</span>
                             <input type="file" accept=".json" class="hidden" @change="importData($event)">
                         </label>
@@ -268,47 +136,48 @@
                 <!-- Fil d'Ariane -->
                 <div class="bg-gray-900 border border-gray-800 px-4 py-3 rounded-2xl flex items-center space-x-2 text-xs sm:text-sm text-gray-400 overflow-x-auto shadow-sm">
                     <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
-                    <span>/</span>
+                    <span class="text-gray-600">/</span>
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[200px]" x-text="currentProject.title"></span>
                 </div>
 
-                <!-- En-tête du projet -->
+                <!-- En-tête du projet compact -->
                 <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
                     <div class="overflow-hidden">
                         <h2 class="text-xl sm:text-2xl font-bold truncate" x-text="currentProject.title"></h2>
                         <p class="text-xs text-gray-400 capitalize mt-0.5" x-text="'Type : ' + formatType(currentProject.type)"></p>
                     </div>
-                    <button @click="openRenameModal('project', currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-800 whitespace-nowrap flex-shrink-0">
+                    <button @click="openRenameModal('project', currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
                         Modifier le nom
                     </button>
                 </div>
 
                 <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
                     <div class="space-y-4">
-                        <!-- SÉLECTEUR DE SAISONS -->
-                        <div class="flex items-center space-x-2 overflow-x-auto pb-1">
+                        
+                        <!-- SÉLECTEUR DE SAISONS STYLE NETFLIX -->
+                        <div class="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
                             <template x-for="season in currentProject.seasons" :key="season.id">
                                 <button @click="activeSeasonId = season.id" 
-                                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex-shrink-0 border border-gray-800"
-                                        :class="activeSeasonId === season.id ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-900 text-gray-400 hover:text-white'"
+                                        class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex-shrink-0"
+                                        :class="activeSeasonId === season.id ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30' : 'bg-gray-900 text-gray-400 hover:text-white border border-gray-800'"
                                         x-text="'Saison ' + season.seasonNumber">
                                 </button>
                             </template>
-                            <button @click="addSeason(currentProject.id)" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-800 flex-shrink-0 whitespace-nowrap">
+                            <button @click="addSeason(currentProject.id)" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700/50 flex-shrink-0 whitespace-nowrap">
                                 + Saison
                             </button>
                         </div>
 
-                        <!-- CONTENU DE LA SAISON -->
+                        <!-- CONTENU DE LA SAISON ACTIVE -->
                         <template x-if="getActiveSeason()">
                             <div class="bg-gray-900 border border-gray-800 p-4 sm:p-5 rounded-2xl space-y-4 shadow-md">
                                 <div class="flex justify-between items-center">
                                     <h4 class="font-bold text-base text-blue-400" x-text="'Saison ' + getActiveSeason().seasonNumber"></h4>
                                     <div class="flex items-center space-x-2">
-                                        <button @click="deleteSeason(currentProject.id, getActiveSeason().id)" class="text-xs text-red-400 hover:text-red-300 bg-red-950 border border-red-900 px-2.5 py-1.5 rounded-lg transition">
+                                        <button @click="deleteSeason(currentProject.id, getActiveSeason().id)" class="text-xs text-red-400 hover:text-red-300 bg-red-950/40 border border-red-900/40 px-2.5 py-1.5 rounded-lg transition">
                                             Supprimer
                                         </button>
-                                        <button @click="addEpisode(currentProject.id, getActiveSeason().id)" class="text-xs bg-blue-950 text-blue-300 border border-blue-800 px-3 py-1.5 rounded-lg hover:bg-blue-900 transition">
+                                        <button @click="addEpisode(currentProject.id, getActiveSeason().id)" class="text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30 px-3 py-1.5 rounded-lg hover:bg-blue-600/30 transition">
                                             + Épisode
                                         </button>
                                     </div>
@@ -316,13 +185,13 @@
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                     <template x-for="episode in getActiveSeason().episodes" :key="episode.id">
-                                        <div class="bg-gray-950 border border-gray-800 p-3.5 rounded-xl transition flex justify-between items-center">
+                                        <div class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-3.5 rounded-xl transition flex justify-between items-center">
                                             <div @click="openEpisode(episode)" class="overflow-hidden pr-2 flex-1 cursor-pointer">
                                                 <span class="text-[10px] text-gray-500 block" x-text="'Épisode ' + episode.episodeNumber"></span>
                                                 <span class="font-semibold text-white text-xs sm:text-sm block truncate max-w-[140px]" x-text="episode.title"></span>
                                             </div>
                                             <div class="flex items-center space-x-1.5 flex-shrink-0">
-                                                <button @click="deleteEpisode(currentProject.id, getActiveSeason().id, episode.id)" class="text-gray-500 hover:text-red-400 text-xs p-1">🗑️</button>
+                                                <button @click="deleteEpisode(currentProject.id, getActiveSeason().id, episode.id)" class="text-gray-500 hover:text-red-400 text-xs p-1" title="Supprimer l'épisode">🗑️</button>
                                                 <span @click="openEpisode(episode)" class="text-gray-600 cursor-pointer text-xs">➔</span>
                                             </div>
                                         </div>
@@ -330,6 +199,7 @@
                                 </div>
                             </div>
                         </template>
+
                     </div>
                 </template>
 
@@ -347,31 +217,31 @@
                 <!-- Fil d'Ariane -->
                 <div class="bg-gray-900 border border-gray-800 px-4 py-3 rounded-2xl flex items-center space-x-2 text-xs sm:text-sm text-gray-400 overflow-x-auto shadow-sm">
                     <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
-                    <span>/</span>
+                    <span class="text-gray-600">/</span>
                     <span class="cursor-pointer hover:text-white whitespace-nowrap truncate max-w-[100px]" @click="currentView = 'projectDetail'" x-text="currentProject.title"></span>
-                    <span>/</span>
+                    <span class="text-gray-600">/</span>
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[100px]" x-text="currentEpisode.title"></span>
                 </div>
 
-                <!-- En-tête -->
+                <!-- En-tête de l'épisode compact -->
                 <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
                     <div class="overflow-hidden">
                         <h2 class="text-xl sm:text-2xl font-bold truncate" x-text="currentEpisode.title"></h2>
                         <p class="text-xs text-gray-400 mt-0.5">Espace de travail : Script, Prompt et Rushes.</p>
                     </div>
-                    <button @click="openRenameModal('episode', currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-800 whitespace-nowrap flex-shrink-0">
+                    <button @click="openRenameModal('episode', currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-700/50 shadow-sm whitespace-nowrap flex-shrink-0">
                         Modifier le nom
                     </button>
                 </div>
 
-                <!-- SCRIPT & PROMPT -->
+                <!-- SECTION A : SCRIPT & PROMPT -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
                             <label class="font-bold text-sm text-gray-300">Script</label>
                             <button @click="copyText(currentEpisode.script, 'script')" class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
                         </div>
-                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="10" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 text-white"></textarea>
+                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="10" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
                     </div>
 
                     <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
@@ -379,15 +249,15 @@
                             <label class="font-bold text-sm text-gray-300">Prompt</label>
                             <button @click="copyText(currentEpisode.prompts, 'prompts')" class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
                         </div>
-                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="10" placeholder="Collez vos prompts ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 text-white"></textarea>
+                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="10" placeholder="Collez vos prompts ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500"></textarea>
                     </div>
                 </div>
 
-                <!-- MÉDIAS ORIGINAUX -->
+                <!-- SECTION B : ESPACE MÉDIAS ORIGINAUX -->
                 <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 shadow-lg">
                     <div class="flex justify-between items-center">
                         <h3 class="font-bold text-lg">📁 Fichiers Originaux</h3>
-                        <label class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-4 py-2.5 rounded-xl cursor-pointer transition shadow-md">
+                        <label class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-4 py-2.5 rounded-xl cursor-pointer transition shadow-md shadow-blue-600/20">
                             + Ajouter un fichier
                             <input type="file" class="hidden" @change="addMedia($event, 'original')">
                         </label>
@@ -398,12 +268,12 @@
                             <div class="bg-gray-950 border border-gray-800 p-3.5 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-sm">
                                 <div class="flex items-center space-x-2.5 overflow-hidden w-full sm:w-auto">
                                     <span class="text-lg flex-shrink-0" x-text="mediaIcon(media.type)"></span>
-                                    <span class="font-medium text-white truncate max-w-[200px]" x-text="media.name"></span>
+                                    <span class="font-medium text-white truncate max-w-[200px] sm:max-w-xs" x-text="media.name"></span>
                                 </div>
                                 <div class="flex items-center space-x-2 w-full sm:w-auto justify-end flex-wrap gap-1.5">
-                                    <button @click="previewMedia(media)" class="text-blue-300 bg-blue-950 border border-blue-800 px-3 py-1.5 rounded-lg text-xs font-medium">Lire ▶️</button>
-                                    <a :href="media.url" :download="media.name" class="text-gray-300 bg-gray-800 px-3 py-1.5 rounded-lg text-xs">Télécharger</a>
-                                    <button @click="deleteMedia(media.id)" class="text-red-400 bg-red-950 border border-red-900 px-2.5 py-1.5 rounded-lg text-xs">Supprimer</button>
+                                    <button @click="previewMedia(media)" class="text-blue-300 hover:text-white bg-blue-950 hover:bg-blue-900 border border-blue-800/50 px-3 py-1.5 rounded-lg text-xs font-medium transition">Lire ▶️</button>
+                                    <a :href="media.url" :download="media.name" class="text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-xs transition">Télécharger</a>
+                                    <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-900/40 border border-red-900/50 px-2.5 py-1.5 rounded-lg text-xs transition">Supprimer</button>
                                 </div>
                             </div>
                         </template>
@@ -413,124 +283,254 @@
                     </div>
                 </div>
 
-                <!-- FORMATS RÉSEAUX SOCIAUX -->
+                <!-- SECTION C : FORMATS RÉSEAUX SOCIAUX -->
                 <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 shadow-lg">
                     <h3 class="font-bold text-lg">📱 Formats Réseaux Sociaux</h3>
+                    
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Répétition des blocs réseaux sociaux -->
-                        <template x-for="fmt in ['youtube', 'youtube_shorts', 'tiktok', 'instagram', 'facebook']">
-                            <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold text-sm text-blue-400 capitalize" x-text="fmt.replace('_', ' ')"></span>
-                                    <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
-                                        + Ajouter
-                                        <input type="file" class="hidden" @change="addMedia($event, fmt)">
-                                    </label>
-                                </div>
-                                <div class="space-y-2">
-                                    <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === fmt)" :key="media.id">
-                                        <div class="bg-gray-900 p-3 rounded-xl flex flex-col space-y-2 text-xs border border-gray-800">
-                                            <div class="flex justify-between items-center">
-                                                <span class="font-medium text-white truncate max-w-[170px]" x-text="media.name"></span>
-                                                <button @click="deleteMedia(media.id)" class="text-red-400 text-sm">✕</button>
-                                            </div>
-                                            <div class="flex space-x-2 pt-1 border-t border-gray-800">
-                                                <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
-                                                <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center font-medium">Télécharger</a>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
+                        
+                        <!-- YouTube -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-red-400">YouTube (16:9)</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'youtube')">
+                                </label>
                             </div>
-                        </template>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'youtube')" :key="media.id">
+                                    <div class="bg-gray-900 p-3 rounded-xl flex flex-col space-y-2 text-xs">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-medium text-white truncate max-w-[170px]" x-text="media.name"></span>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300 text-sm p-1">✕</button>
+                                        </div>
+                                        <div class="flex space-x-2 pt-1 border-t border-gray-800">
+                                            <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 border border-blue-800/50 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
+                                            <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center font-medium">Télécharger</a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- YouTube Shorts -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-red-500">YouTube Shorts (9:16)</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'youtube_shorts')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'youtube_shorts')" :key="media.id">
+                                    <div class="bg-gray-900 p-3 rounded-xl flex flex-col space-y-2 text-xs">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-medium text-white truncate max-w-[170px]" x-text="media.name"></span>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300 text-sm p-1">✕</button>
+                                        </div>
+                                        <div class="flex space-x-2 pt-1 border-t border-gray-800">
+                                            <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 border border-blue-800/50 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
+                                            <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center font-medium">Télécharger</a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- TikTok -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-pink-400">TikTok (9:16)</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'tiktok')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'tiktok')" :key="media.id">
+                                    <div class="bg-gray-900 p-3 rounded-xl flex flex-col space-y-2 text-xs">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-medium text-white truncate max-w-[170px]" x-text="media.name"></span>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300 text-sm p-1">✕</button>
+                                        </div>
+                                        <div class="flex space-x-2 pt-1 border-t border-gray-800">
+                                            <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 border border-blue-800/50 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
+                                            <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center font-medium">Télécharger</a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Instagram -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-purple-400">Instagram (9:16 / 4:5)</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'instagram')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'instagram')" :key="media.id">
+                                    <div class="bg-gray-900 p-3 rounded-xl flex flex-col space-y-2 text-xs">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-medium text-white truncate max-w-[170px]" x-text="media.name"></span>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300 text-sm p-1">✕</button>
+                                        </div>
+                                        <div class="flex space-x-2 pt-1 border-t border-gray-800">
+                                            <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 border border-blue-800/50 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
+                                            <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center font-medium">Télécharger</a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Facebook -->
+                        <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3 sm:col-span-2 lg:col-span-1">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-blue-400">Facebook (16:9 / 9:16)</span>
+                                <label class="text-xs bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
+                                    + Ajouter
+                                    <input type="file" class="hidden" @change="addMedia($event, 'facebook')">
+                                </label>
+                            </div>
+                            <div class="space-y-2">
+                                <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'facebook')" :key="media.id">
+                                    <div class="bg-gray-900 p-3 rounded-xl flex flex-col space-y-2 text-xs">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-medium text-white truncate max-w-[170px]" x-text="media.name"></span>
+                                            <button @click="deleteMedia(media.id)" class="text-red-400 hover:text-red-300 text-sm p-1">✕</button>
+                                        </div>
+                                        <div class="flex space-x-2 pt-1 border-t border-gray-800">
+                                            <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 border border-blue-800/50 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
+                                            <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center font-medium">Télécharger</a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </template>
     </main>
 
-    <!-- MODALE : LECTEUR -->
+    <!-- MODALE : LECTEUR / VISIONNEUSE -->
     <template x-if="showPreviewModal && previewMediaItem">
-        <div class="fixed inset-0 bg-gray-950/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="fixed inset-0 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
             <div class="bg-gray-900 border border-gray-800 rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                <div class="flex justify-between items-center px-6 py-4 bg-gray-950 border-b border-gray-800">
+                
+                <div class="flex justify-between items-center px-6 py-4 bg-gray-950/90 border-b border-gray-800">
                     <div class="flex items-center space-x-3 overflow-hidden pr-2">
-                        <span class="text-2xl" x-text="mediaIcon(previewMediaItem.type)"></span>
+                        <span class="text-2xl flex-shrink-0" x-text="mediaIcon(previewMediaItem.type)"></span>
                         <div class="overflow-hidden">
                             <h3 class="font-bold text-base text-white truncate" x-text="previewMediaItem.name"></h3>
-                            <span class="text-xs text-gray-400 uppercase" x-text="'Format : ' + previewMediaItem.format"></span>
+                            <span class="text-xs text-gray-400 uppercase tracking-wider" x-text="'Format : ' + previewMediaItem.format"></span>
                         </div>
                     </div>
-                    <button @click="closePreview()" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full flex items-center justify-center">✕</button>
+                    <button @click="closePreview()" class="w-9 h-9 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-full flex items-center justify-center transition text-lg flex-shrink-0">✕</button>
                 </div>
-                <div class="flex-1 flex items-center justify-center bg-gray-950 p-4 min-h-[320px] max-h-[68vh] overflow-hidden">
+                
+                <!-- Conteneur vidéo avec recadrage automatique -->
+                <div class="flex-1 flex items-center justify-center bg-black p-4 min-h-[320px] max-h-[68vh] overflow-hidden">
                     <template x-if="previewMediaItem.type === 'video'">
-                        <video :src="previewMediaItem.url" controls autoplay playsinline class="max-h-[60vh] rounded-xl border border-gray-800"></video>
+                        <div class="relative flex items-center justify-center w-full h-full">
+                            <video :src="previewMediaItem.url" controls autoplay playsinline
+                                   class="rounded-xl shadow-2xl border border-gray-800 bg-black object-cover"
+                                   :class="['youtube', 'facebook'].includes(previewMediaItem.format) ? 'w-full aspect-video' : 'h-[60vh] aspect-[9/16]'">
+                            </video>
+                        </div>
                     </template>
                     <template x-if="previewMediaItem.type === 'audio'">
-                        <audio :src="previewMediaItem.url" controls autoplay class="w-full"></audio>
+                        <div class="w-full max-w-md bg-gray-950 border border-gray-800 p-8 rounded-2xl flex flex-col items-center space-y-6 shadow-xl">
+                            <div class="w-20 h-20 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center text-4xl animate-pulse">
+                                🎵
+                            </div>
+                            <audio :src="previewMediaItem.url" controls autoplay class="w-full"></audio>
+                        </div>
                     </template>
                     <template x-if="previewMediaItem.type === 'image'">
-                        <img :src="previewMediaItem.url" class="max-w-full max-h-[60vh] object-contain rounded-2xl border border-gray-800">
+                        <img :src="previewMediaItem.url" class="max-w-full max-h-[60vh] object-contain rounded-2xl shadow-2xl border border-gray-800">
                     </template>
                 </div>
-                <div class="flex justify-end px-6 py-4 bg-gray-950 border-t border-gray-800">
-                    <button @click="closePreview()" class="px-5 py-2.5 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl transition">Fermer</button>
+
+                <div class="flex justify-between items-center px-6 py-4 bg-gray-950/90 border-t border-gray-800">
+                    <span class="text-xs text-gray-500 hidden sm:inline">Recadrage automatique VMax</span>
+                    <div class="flex space-x-3 w-full sm:w-auto justify-end">
+                        <a :href="previewMediaItem.url" :download="previewMediaItem.name" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition shadow-lg shadow-blue-600/20 flex items-center space-x-2">
+                            <span>Télécharger</span>
+                            <span>⬇️</span>
+                        </a>
+                        <button @click="closePreview()" class="px-5 py-2.5 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl transition">
+                            Fermer
+                        </button>
+                    </div>
                 </div>
+
             </div>
         </div>
     </template>
 
     <!-- MODALE : CRÉATION DE PROJET -->
     <template x-if="showNewProjectModal">
-        <div class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div class="bg-gray-900 border border-gray-800 p-6 rounded-3xl w-full max-w-md space-y-5 shadow-2xl">
                 <div class="flex justify-between items-center">
                     <h3 class="text-xl font-bold">Nouveau Projet Vidéo</h3>
-                    <button @click="showNewProjectModal = false" class="text-gray-400">✕</button>
+                    <button @click="showNewProjectModal = false" class="text-gray-400 hover:text-white">✕</button>
                 </div>
+                
                 <div class="space-y-1.5">
                     <label class="text-xs font-medium text-gray-400">Titre du projet</label>
-                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Super Projet" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm text-white">
+                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Super Projet" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 text-white">
                 </div>
+
                 <div class="space-y-1.5">
                     <label class="text-xs font-medium text-gray-400">Type de projet</label>
-                    <select x-model="newProjectType" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm text-white">
+                    <select x-model="newProjectType" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 text-white">
                         <option value="serie">Série entière</option>
                         <option value="mini_serie">Mini-série</option>
                         <option value="court_metrage">Court-métrage</option>
                         <option value="long_metrage">Long-métrage</option>
                     </select>
                 </div>
+
                 <div class="flex justify-end space-x-3 pt-2">
-                    <button @click="showNewProjectModal = false" class="px-4 py-2.5 text-xs font-semibold bg-gray-800 text-gray-300 rounded-xl">Annuler</button>
-                    <button @click="createProject()" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 text-white rounded-xl shadow-lg">Créer</button>
+                    <button @click="showNewProjectModal = false" class="px-4 py-2.5 text-xs font-semibold bg-gray-800 hover:bg-gray-700 rounded-xl transition text-gray-300">Annuler</button>
+                    <button @click="createProject()" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 rounded-xl text-white transition shadow-lg shadow-blue-600/20">Créer le projet</button>
                 </div>
             </div>
         </div>
     </template>
 
-    <!-- MODALE : RENOMMER -->
+    <!-- MODALE : RENOMMER (PROJET OU ÉPISODE) SANS URL NAVIGATEUR -->
     <template x-if="showRenameModal">
-        <div class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div class="bg-gray-900 border border-gray-800 p-6 rounded-3xl w-full max-w-md space-y-5 shadow-2xl">
                 <div class="flex justify-between items-center">
                     <h3 class="text-xl font-bold" x-text="renameType === 'project' ? 'Modifier le nom du projet' : 'Modifier le nom de l\'épisode'"></h3>
-                    <button @click="showRenameModal = false" class="text-gray-400">✕</button>
+                    <button @click="showRenameModal = false" class="text-gray-400 hover:text-white">✕</button>
                 </div>
+                
                 <div class="space-y-1.5">
                     <label class="text-xs font-medium text-gray-400">Nouveau nom</label>
-                    <input type="text" x-model="renameInputVal" @keyup.enter="confirmRename()" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm text-white" autofocus>
+                    <input type="text" x-model="renameInputVal" @keyup.enter="confirmRename()" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-sm focus:outline-none focus:border-blue-500 text-white" autofocus>
                 </div>
+
                 <div class="flex justify-end space-x-3 pt-2">
-                    <button @click="showRenameModal = false" class="px-4 py-2.5 text-xs font-semibold bg-gray-800 text-gray-300 rounded-xl">Annuler</button>
-                    <button @click="confirmRename()" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 text-white rounded-xl shadow-lg">Enregistrer</button>
+                    <button @click="showRenameModal = false" class="px-4 py-2.5 text-xs font-semibold bg-gray-800 hover:bg-gray-700 rounded-xl transition text-gray-300">Annuler</button>
+                    <button @click="confirmRename()" class="px-5 py-2.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 rounded-xl text-white transition shadow-lg shadow-blue-600/20">Enregistrer</button>
                 </div>
             </div>
         </div>
     </template>
 
-    <!-- LOGIQUE JAVASCRIPT -->
+    <!-- LOGIQUE JAVASCRIPT (ALPINE.JS) -->
     <script>
         function appData() {
             return {
@@ -543,17 +543,50 @@
                 showNewProjectModal: false,
                 newProjectTitle: '',
                 newProjectType: 'serie',
+                
+                // État de la modale de renommage personnalisée
                 showRenameModal: false,
-                renameType: '',
+                renameType: '', // 'project' ou 'episode'
                 renameTarget: null,
                 renameInputVal: '',
+
                 copiedScript: false,
                 copiedPrompts: false,
                 showPreviewModal: false,
                 previewMediaItem: null,
+                touchStartX: 0,
+                touchStartY: 0,
 
                 initApp() {
-                    setTimeout(() => { this.isLoading = false; }, 1400);
+                    setTimeout(() => {
+                        this.isLoading = false;
+                    }, 1600);
+
+                    // Gestion du geste swipe de gauche vers la droite pour retour en arrière
+                    window.addEventListener('touchstart', (e) => {
+                        this.touchStartX = e.touches[0].clientX;
+                        this.touchStartY = e.touches[0].clientY;
+                    }, { passive: true });
+
+                    window.addEventListener('touchend', (e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const touchEndY = e.changedTouches[0].clientY;
+                        const diffX = touchEndX - this.touchStartX;
+                        const diffY = Math.abs(touchEndY - this.touchStartY);
+
+                        // Si le geste commence près du bord gauche (< 50px), glisse vers la droite (> 80px)
+                        if (this.touchStartX < 50 && diffX > 80 && diffY < 60) {
+                            this.goBack();
+                        }
+                    }, { passive: true });
+                },
+
+                goBack() {
+                    if (this.currentView === 'episodeDetail') {
+                        this.currentView = 'projectDetail';
+                    } else if (this.currentView === 'projectDetail') {
+                        this.currentView = 'dashboard';
+                    }
                 },
 
                 saveData() {
@@ -580,7 +613,7 @@
                             if (Array.isArray(importedProjects)) {
                                 this.projects = importedProjects;
                                 this.saveData();
-                                alert('Données et médias importés avec succès !');
+                                alert('Données importées avec succès ! Synchronisation effectuée.');
                             } else {
                                 alert('Format de fichier invalide.');
                             }
@@ -593,29 +626,57 @@
                 },
 
                 formatType(type) {
-                    const maps = { 'serie': 'Série entière', 'mini_serie': 'Mini-série', 'court_metrage': 'Court-métrage', 'long_metrage': 'Long-métrage' };
+                    const maps = {
+                        'serie': 'Série entière',
+                        'mini_serie': 'Mini-série',
+                        'court_metrage': 'Court-métrage',
+                        'long_metrage': 'Long-métrage'
+                    };
                     return maps[type] || type;
                 },
 
                 createProject() {
                     if (!this.newProjectTitle.trim()) return;
+                    
                     const newProj = {
                         id: Date.now().toString(),
                         title: this.newProjectTitle,
                         type: this.newProjectType,
                         seasons: []
                     };
-                    const isFilm = ['court_metrage', 'long_metrage'].includes(this.newProjectType);
-                    newProj.seasons.push({
-                        id: 's_' + Date.now(),
-                        seasonNumber: 1,
-                        episodes: [{
-                            id: 'e_' + Date.now(),
-                            episodeNumber: 1,
-                            title: isFilm ? this.newProjectTitle : 'Épisode 1',
-                            script: '', prompts: '', mediaAssets: []
-                        }]
-                    });
+
+                    if (this.newProjectType === 'serie' || this.newProjectType === 'mini_serie') {
+                        newProj.seasons.push({
+                            id: 's_' + Date.now(),
+                            seasonNumber: 1,
+                            episodes: [
+                                {
+                                    id: 'e_' + Date.now(),
+                                    episodeNumber: 1,
+                                    title: 'Épisode 1',
+                                    script: '',
+                                    prompts: '',
+                                    mediaAssets: []
+                                }
+                            ]
+                        });
+                    } else {
+                        newProj.seasons.push({
+                            id: 's_film_' + Date.now(),
+                            seasonNumber: 1,
+                            episodes: [
+                                {
+                                    id: 'e_film_' + Date.now(),
+                                    episodeNumber: 1,
+                                    title: this.newProjectTitle,
+                                    script: '',
+                                    prompts: '',
+                                    mediaAssets: []
+                                }
+                            ]
+                        });
+                    }
+
                     this.projects.push(newProj);
                     this.saveData();
                     this.newProjectTitle = '';
@@ -647,34 +708,51 @@
 
                 deleteSeason(projectId, seasonId) {
                     const project = this.projects.find(p => p.id === projectId);
-                    if (project && project.seasons.length > 1 && confirm("Supprimer cette saison ?")) {
-                        project.seasons = project.seasons.filter(s => s.id !== seasonId);
-                        this.activeSeasonId = project.seasons[0].id;
-                        this.saveData();
+                    if (project) {
+                        if (project.seasons.length <= 1) {
+                            alert("Impossible de supprimer la seule saison restante.");
+                            return;
+                        }
+                        if (confirm("Voulez-vous vraiment supprimer cette saison et tous ses épisodes ?")) {
+                            project.seasons = project.seasons.filter(s => s.id !== seasonId);
+                            this.activeSeasonId = project.seasons[0].id;
+                            this.saveData();
+                        }
                     }
                 },
 
                 deleteEpisode(projectId, seasonId, episodeId) {
                     const project = this.projects.find(p => p.id === projectId);
-                    const season = project?.seasons.find(s => s.id === seasonId);
-                    if (season && season.episodes.length > 1 && confirm("Supprimer cet épisode ?")) {
-                        season.episodes = season.episodes.filter(e => e.id !== episodeId);
-                        this.saveData();
+                    if (project) {
+                        const season = project.seasons.find(s => s.id === seasonId);
+                        if (season) {
+                            if (season.episodes.length <= 1) {
+                                alert("Impossible de supprimer le seul épisode restant de cette saison.");
+                                return;
+                            }
+                            if (confirm("Voulez-vous vraiment supprimer cet épisode ?")) {
+                                season.episodes = season.episodes.filter(e => e.id !== episodeId);
+                                this.saveData();
+                            }
+                        }
                     }
                 },
 
                 openProject(project) {
                     this.currentProject = project;
-                    if (project.seasons?.[0]) this.activeSeasonId = project.seasons[0].id;
+                    if (project.seasons && project.seasons.length > 0) {
+                        this.activeSeasonId = project.seasons[0].id;
+                    }
                     this.currentView = 'projectDetail';
                 },
 
                 getActiveSeason() {
-                    return this.currentProject?.seasons.find(s => s.id === this.activeSeasonId) || this.currentProject?.seasons[0];
+                    if (!this.currentProject || !this.currentProject.seasons) return null;
+                    return this.currentProject.seasons.find(s => s.id === this.activeSeasonId) || this.currentProject.seasons[0];
                 },
 
                 openMovieWorkspace(project) {
-                    if (project.seasons[0]?.episodes[0]) {
+                    if (project.seasons[0] && project.seasons[0].episodes[0]) {
                         this.currentEpisode = project.seasons[0].episodes[0];
                         this.currentView = 'episodeDetail';
                     }
@@ -683,11 +761,21 @@
                 addSeason(projectId) {
                     const project = this.projects.find(p => p.id === projectId);
                     if (project) {
+                        const nextSeasonNum = project.seasons.length + 1;
                         const newSeasonId = 's_' + Date.now();
                         project.seasons.push({
                             id: newSeasonId,
-                            seasonNumber: project.seasons.length + 1,
-                            episodes: [{ id: 'e_' + Date.now(), episodeNumber: 1, title: 'Épisode 1', script: '', prompts: '', mediaAssets: [] }]
+                            seasonNumber: nextSeasonNum,
+                            episodes: [
+                                {
+                                    id: 'e_' + Date.now(),
+                                    episodeNumber: 1,
+                                    title: 'Épisode 1',
+                                    script: '',
+                                    prompts: '',
+                                    mediaAssets: []
+                                }
+                            ]
                         });
                         this.activeSeasonId = newSeasonId;
                         this.saveData();
@@ -696,11 +784,20 @@
 
                 addEpisode(projectId, seasonId) {
                     const project = this.projects.find(p => p.id === projectId);
-                    const season = project?.seasons.find(s => s.id === seasonId);
-                    if (season) {
-                        const nextNum = season.episodes.length + 1;
-                        season.episodes.push({ id: 'e_' + Date.now(), episodeNumber: nextNum, title: 'Épisode ' + nextNum, script: '', prompts: '', mediaAssets: [] });
-                        this.saveData();
+                    if (project) {
+                        const season = project.seasons.find(s => s.id === seasonId);
+                        if (season) {
+                            const nextEpNum = season.episodes.length + 1;
+                            season.episodes.push({
+                                id: 'e_' + Date.now(),
+                                episodeNumber: nextEpNum,
+                                title: 'Épisode ' + nextEpNum,
+                                script: '',
+                                prompts: '',
+                                mediaAssets: []
+                            });
+                            this.saveData();
+                        }
                     }
                 },
 
@@ -723,22 +820,22 @@
                 addMedia(event, format) {
                     const file = event.target.files[0];
                     if (!file) return;
+
                     let type = 'video';
                     if (file.type.includes('audio')) type = 'audio';
                     else if (file.type.includes('image')) type = 'image';
 
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.currentEpisode.mediaAssets.push({
-                            id: 'm_' + Date.now(),
-                            name: file.name,
-                            type: type,
-                            format: format,
-                            url: e.target.result
-                        });
-                        this.saveData();
-                    };
-                    reader.readAsDataURL(file);
+                    const fileUrl = URL.createObjectURL(file);
+
+                    this.currentEpisode.mediaAssets.push({
+                        id: 'm_' + Date.now(),
+                        name: file.name,
+                        type: type,
+                        format: format,
+                        url: fileUrl
+                    });
+
+                    this.saveData();
                     event.target.value = '';
                 },
 
