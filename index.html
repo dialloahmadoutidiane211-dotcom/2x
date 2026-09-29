@@ -5,35 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VMax - Gestionnaire de Projets Vidéo</title>
     
-    <!-- Icône iOS -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%232563eb%22/><text y=%2270%22 x=%2222%22 font-size=%2255%22>🎬</text></svg>">
     
-    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <!-- CSS NATIF PROPRE ET FLUIDE (Zero bug mobile) -->
     <style>
         * { box-sizing: border-box; }
         body { background-color: #030712; color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; min-height: 100vh; }
         
-        /* Splash Screen */
-        #splash { position: fixed; inset: 0; background: #030712; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
+        #splash { position: fixed; inset: 0; background: #030712; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
         #splash.hidden-splash { opacity: 0; pointer-events: none; }
         
-        /* Layout & Containers */
         .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px; }
-        header { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid #1f2937; position: sticky; top: 0; z-index: 50; padding: 12px 16px; }
+        header { background: rgba(17, 24, 39, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #1f2937; position: sticky; top: 0; z-index: 50; padding: 12px 16px; }
         .header-content { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Grilles et Cartes */
         .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
         @media(min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
         @media(min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 
-        .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; }
+        .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; min-height: 140px; }
         .card:hover { border-color: #3b82f6; }
         
-        /* Boutons & Formulaires */
         button, label.btn-file { background: #1f2937; color: #f3f4f6; border: 1px solid #374151; padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
         button:hover, label.btn-file:hover { background: #374151; }
         .btn-primary { background: #2563eb; border-color: #2563eb; color: #fff; }
@@ -43,28 +36,31 @@
         input, select, textarea { width: 100%; background: #030712; border: 1px solid #1f2937; color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 14px; outline: none; margin-top: 6px; }
         input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
 
-        /* Badges */
         .badge { font-size: 10px; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 20px; display: inline-block; letter-spacing: 0.5px; }
         .badge-serie { background: #3b0764; color: #d8b4fe; border: 1px solid #581c87; }
         .badge-mini { background: #172554; color: #93c5fd; border: 1px solid #1e40af; }
         .badge-court { background: #052e16; color: #86efac; border: 1px solid #14532d; }
         .badge-long { background: #451a03; color: #fde047; border: 1px solid #78350f; }
 
-        /* Modales */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 100; }
-        .modal-box { background: #111827; border: 1px solid #1f2937; border-radius: 20px; width: 100%; max-width: 480px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 100; }
+        .modal-box { background: #111827; border: 1px solid #1f2937; border-radius: 20px; width: 100%; max-width: 500px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
         
-        /* Divers */
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .flex-align { display: flex; align-items: center; gap: 8px; }
         .breadcrumb { background: #111827; border: 1px solid #1f2937; padding: 10px 16px; border-radius: 12px; font-size: 13px; color: #9ca3af; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; overflow-x: auto; }
         .breadcrumb span { cursor: pointer; }
         .breadcrumb span:hover { color: #fff; }
+
+        /* Conteneurs de lecture adaptés aux formats réseaux sociaux */
+        .preview-container { background: #000; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; width: 100%; margin: 0 auto; position: relative; }
+        .format-youtube { aspect-ratio: 16 / 9; max-height: 50vh; }
+        .format-vertical { aspect-ratio: 9 / 16; max-height: 65vh; }
+        .format-original { max-height: 55vh; }
     </style>
 </head>
 <body x-data="appData()" x-init="initApp()">
 
-    <!-- SPLASH SCREEN PROPRE -->
+    <!-- SPLASH SCREEN -->
     <div id="splash" :class="isLoading ? '' : 'hidden-splash'">
         <div style="font-size: 48px; margin-bottom: 12px;">🎬</div>
         <h2 style="font-size: 20px; font-weight: 800; letter-spacing: 1px; color: #60a5fa; margin: 0;">VMAX STUDIO</h2>
@@ -85,10 +81,10 @@
         </div>
     </header>
 
-    <!-- CONTENU PRINCIPAL -->
+    <!-- MAIN -->
     <main class="container">
 
-        <!-- 1. DASHBOARD -->
+        <!-- DASHBOARD -->
         <template x-if="currentView === 'dashboard'">
             <div style="display: flex; flex-direction: column; gap: 24px;">
                 <div>
@@ -97,7 +93,6 @@
                 </div>
 
                 <div class="grid">
-                    <!-- Carte Nouveau Projet -->
                     <div class="card" @click="showNewProjectModal = true" style="border-style: dashed; border-color: #3b82f6; align-items: center; justify-content: center; text-align: center; background: rgba(37, 99, 235, 0.03);">
                         <div style="width: 44px; height: 44px; background: #2563eb; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: white; margin-bottom: 8px;">+</div>
                         <div>
@@ -106,7 +101,6 @@
                         </div>
                     </div>
 
-                    <!-- Liste des projets -->
                     <template x-for="project in projects" :key="project.id">
                         <div class="card" @click="openProject(project)">
                             <div class="flex-between">
@@ -132,8 +126,7 @@
                     </template>
                 </div>
 
-                <!-- Synchronisation -->
-                <div style="background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px; margin-top: 12px;">
+                <div style="background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 20px;">
                     <h3 style="font-size: 15px; font-weight: 700; margin: 0 0 4px 0;">🔄 Synchronisation & Sauvegarde</h3>
                     <p style="font-size: 12px; color: #9ca3af; margin: 0 0 16px 0;">Exportez ou importez vos projets sous format JSON.</p>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -147,7 +140,7 @@
             </div>
         </template>
 
-        <!-- 2. VUE PROJET -->
+        <!-- VUE PROJET -->
         <template x-if="currentView === 'projectDetail' && currentProject">
             <div style="display: flex; flex-direction: column; gap: 20px;">
                 <div class="breadcrumb">
@@ -168,7 +161,6 @@
 
                 <template x-if="currentProject.type === 'serie' || currentProject.type === 'mini_serie'">
                     <div style="display: flex; flex-direction: column; gap: 16px;">
-                        <!-- Saisons -->
                         <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
                             <template x-for="season in currentProject.seasons" :key="season.id">
                                 <button @click="activeSeasonId = season.id" 
@@ -179,7 +171,6 @@
                             <button @click="addSeason(currentProject.id)">+ Saison</button>
                         </div>
 
-                        <!-- Épisodes de la saison -->
                         <template x-if="getActiveSeason()">
                             <div class="card" style="min-height: auto; gap: 16px;">
                                 <div class="flex-between">
@@ -215,7 +206,7 @@
             </div>
         </template>
 
-        <!-- 3. ESPACE ÉPISODE -->
+        <!-- ESPACE ÉPISODE -->
         <template x-if="currentView === 'episodeDetail' && currentEpisode">
             <div style="display: flex; flex-direction: column; gap: 20px;">
                 <div class="breadcrumb">
@@ -236,7 +227,6 @@
                     </div>
                 </div>
 
-                <!-- Script & Prompt -->
                 <div class="grid">
                     <div class="card" style="min-height: auto;">
                         <div class="flex-between" style="margin-bottom: 8px;">
@@ -297,7 +287,7 @@
                                 <div style="display: flex; flex-direction: column; gap: 6px;">
                                     <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === fmt)" :key="media.id">
                                         <div style="background: #111827; padding: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-                                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50%;" x-text="media.name"></span>
+                                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 45%;" x-text="media.name"></span>
                                             <div class="flex-align">
                                                 <button class="btn-primary" style="padding: 2px 6px; font-size: 10px;" @click="previewMedia(media)">Lire</button>
                                                 <a :href="media.url" :download="media.name" style="background:#374151; color:#fff; padding:2px 6px; border-radius:6px; text-decoration:none; font-size:10px;">Sauver</a>
@@ -314,25 +304,36 @@
         </template>
     </main>
 
-    <!-- MODALE LECTEUR -->
+    <!-- MODALE LECTEUR AVEC AJUSTEMENT DU RATIO FORMAT -->
     <template x-if="showPreviewModal && previewMediaItem">
         <div class="modal-overlay">
             <div class="modal-box" style="max-width: 600px;">
                 <div class="flex-between" style="margin-bottom: 12px;">
-                    <h3 style="font-size: 15px; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" x-text="previewMediaItem.name"></h3>
+                    <div>
+                        <h3 style="font-size: 15px; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px;" x-text="previewMediaItem.name"></h3>
+                        <span style="font-size: 11px; color: #60a5fa; text-transform: uppercase;" x-text="'Format cible : ' + previewMediaItem.format.replace('_', ' ')"></span>
+                    </div>
                     <button @click="closePreview()" style="padding: 4px 8px;">✕</button>
                 </div>
-                <div style="background: #030712; border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: center; min-height: 250px; max-height: 60vh; overflow: hidden;">
+
+                <!-- Conteneur avec adaptation dynamique du ratio d'affichage -->
+                <div class="preview-container" 
+                     :class="{
+                         'format-youtube': ['youtube', 'facebook'].includes(previewMediaItem.format),
+                         'format-vertical': ['youtube_shorts', 'tiktok', 'instagram'].includes(previewMediaItem.format),
+                         'format-original': previewMediaItem.format === 'original'
+                     }">
                     <template x-if="previewMediaItem.type === 'video'">
-                        <video :src="previewMediaItem.url" controls autoplay playsinline style="max-width: 100%; max-height: 50vh; border-radius: 8px;"></video>
+                        <video :src="previewMediaItem.url" controls autoplay playsinline style="width: 100%; height: 100%; object-fit: contain;"></video>
                     </template>
                     <template x-if="previewMediaItem.type === 'audio'">
-                        <audio :src="previewMediaItem.url" controls autoplay style="width: 100%;"></audio>
+                        <audio :src="previewMediaItem.url" controls autoplay style="width: 90%;"></audio>
                     </template>
                     <template x-if="previewMediaItem.type === 'image'">
-                        <img :src="previewMediaItem.url" style="max-width: 100%; max-height: 50vh; object-fit: contain; border-radius: 8px;">
+                        <img :src="previewMediaItem.url" style="width: 100%; height: 100%; object-fit: contain;">
                     </template>
                 </div>
+
                 <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
                     <button @click="closePreview()">Fermer</button>
                 </div>
@@ -369,7 +370,6 @@
         </div>
     </template>
 
-    <!-- SCRIPT ALPINE -->
     <script>
         function appData() {
             return {
@@ -390,7 +390,7 @@
                 touchStartY: 0,
 
                 initApp() {
-                    setTimeout(() => { this.isLoading = false; }, 600);
+                    setTimeout(() => { this.isLoading = false; }, 500);
 
                     window.addEventListener('touchstart', (e) => {
                         this.touchStartX = e.touches[0].clientX;
