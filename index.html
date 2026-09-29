@@ -5,167 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VMax - Gestionnaire de Projets Vidéo</title>
     
-    <!-- Icône personnalisée pour l'écran d'accueil iOS -->
+    <!-- Icône personnalisée -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%232563eb%22/><text y=%2270%22 x=%2222%22 font-size=%2255%22>🎬</text></svg>">
     
-    <!-- Alpine.js pour la réactivité -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    <!-- STYLE CSS NATIF OPTIMISÉ POUR MOBILE -->
-    <style>
-        body { background-color: #030712; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; }
-        .bg-gray-950 { background-color: #030712; }
-        .bg-gray-900 { background-color: #111827; }
-        .bg-gray-800 { background-color: #1f2937; }
-        .bg-blue-600 { background-color: #2563eb; }
-        .bg-blue-950 { background-color: #172554; }
-        .bg-purple-950 { background-color: #3b0764; }
-        .bg-red-950 { background-color: #450a0a; }
-        .bg-green-950 { background-color: #052e16; }
-        .bg-amber-950 { background-color: #451a03; }
-        .text-gray-100 { color: #f3f4f6; }
-        .text-gray-200 { color: #e5e7eb; }
-        .text-gray-300 { color: #d1d5db; }
-        .text-gray-400 { color: #9ca3af; }
-        .text-gray-500 { color: #6b7280; }
-        .text-white { color: #ffffff; }
-        .text-blue-300 { color: #93c5fd; }
-        .text-blue-400 { color: #60a5fa; }
-        .text-purple-300 { color: #d8b4fe; }
-        .text-green-300 { color: #86efac; }
-        .text-amber-300 { color: #fde047; }
-        .text-red-400 { color: #f87171; }
-        .text-emerald-400 { color: #34d399; }
-        .text-amber-400 { color: #fbbf24; }
-
-        .flex { display: flex; }
-        .hidden { display: none; }
-        .grid { display: grid; }
-        .flex-col { flex-direction: column; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .justify-center { justify-content: center; }
-        .justify-end { justify-content: flex-end; }
-        .flex-wrap { flex-wrap: wrap; }
-        .flex-shrink-0 { flex-shrink: 0; }
-        .flex-1 { flex: 1 1 0%; }
-
-        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-        @media (min-width: 640px) {
-            .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .sm\:flex-row { flex-direction: row; }
-            .sm\:col-span-2 { grid-column: span 2 / span 2; }
-            .sm\:text-sm { font-size: 0.875rem; }
-            .sm\:text-2xl { font-size: 1.5rem; }
-        }
-        @media (min-width: 1024px) {
-            .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-        }
-
-        .p-3 { padding: 0.75rem; }
-        .p-3\.5 { padding: 0.875rem; }
-        .p-4 { padding: 1rem; }
-        .p-5 { padding: 1.25rem; }
-        .p-6 { padding: 1.5rem; }
-        .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
-        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
-        .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
-        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
-        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-        
-        .space-y-1\.5 > * + * { margin-top: 0.375rem; }
-        .space-y-2 > * + * { margin-top: 0.5rem; }
-        .space-y-3 > * + * { margin-top: 0.75rem; }
-        .space-y-4 > * + * { margin-top: 1rem; }
-        .space-y-6 > * + * { margin-top: 1.5rem; }
-        .space-x-2 > * + * { margin-left: 0.5rem; }
-        .space-x-2\.5 > * + * { margin-left: 0.625rem; }
-        .space-x-3 > * + * { margin-left: 0.75rem; }
-        
-        .gap-3 { gap: 0.75rem; }
-        .gap-4 { gap: 1rem; }
-        .gap-6 { gap: 1.5rem; }
-
-        .rounded-xl { border-radius: 0.75rem; }
-        .rounded-2xl { border-radius: 1rem; }
-        .rounded-3xl { border-radius: 1.5rem; }
-        .rounded-full { border-radius: 9999px; }
-        .border { border-width: 1px; border-style: solid; border-color: #1f2937; }
-        .border-gray-800 { border-color: #1f2937; }
-
-        .text-xs { font-size: 0.75rem; }
-        .text-sm { font-size: 0.875rem; }
-        .text-base { font-size: 1rem; }
-        .text-lg { font-size: 1.125rem; }
-        .text-xl { font-size: 1.25rem; }
-        .text-2xl { font-size: 1.5rem; }
-        .font-bold { font-weight: 700; }
-        .font-extrabold { font-weight: 800; }
-        .font-semibold { font-weight: 600; }
-        .font-medium { font-weight: 500; }
-        .uppercase { text-transform: uppercase; }
-        .capitalize { text-transform: capitalize; }
-        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .cursor-pointer { cursor: pointer; }
-        .sticky { position: sticky; }
-        .top-0 { top: 0px; }
-        .z-40 { z-index: 40; }
-        .z-50 { z-index: 50; }
-        .fixed { position: fixed; }
-        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
-        .w-full { width: 100%; }
-        .max-w-6xl { max-width: 72rem; margin-left: auto; margin-right: auto; }
-        .max-w-md { max-width: 28rem; }
-        .max-w-3xl { max-width: 48rem; }
-        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-        .backdrop-blur-md { backdrop-filter: blur(12px); }
-        .overflow-x-auto { overflow-x: auto; }
-        .overflow-hidden { overflow: hidden; }
-        .transition { transition: all 0.2s ease; }
-        textarea, select, input { color-scheme: dark; }
-
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-        }
-        .splash-glow { animation: pulseGlow 2s infinite ease-in-out; }
-    </style>
 </head>
-<body class="bg-gray-950 text-gray-100 min-h-screen font-sans overflow-x-hidden" x-data="appData()" x-init="initApp()">
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased overflow-x-hidden selection:bg-blue-600 selection:text-white" x-data="appData()" x-init="initApp()">
 
-    <!-- ANIMATION DE DÉMARRAGE (DISPARAÎT DÉFINITIVEMENT) -->
+    <!-- SPLASH SCREEN PROPRE QUI DISPARAÎT -->
     <div x-show="isLoading" 
-         class="fixed inset-0 z-50 bg-[#030712] flex flex-col items-center justify-center space-y-6 select-none transition-opacity duration-500"
-         :style="isLoading ? 'opacity: 1;' : 'opacity: 0; pointer-events: none;'">
-        <div class="relative flex items-center justify-center">
-            <div class="absolute w-36 h-36 bg-blue-600/20 rounded-full splash-glow"></div>
-            <div class="relative w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl text-3xl">
-                🎬
-            </div>
+         x-transition:leave="transition ease-out duration-500"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0 pointer-events-none"
+         class="fixed inset-0 z-50 bg-gray-950 flex flex-col items-center justify-center space-y-4">
+        <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-600/30 text-3xl animate-pulse">
+            🎬
         </div>
-        <div class="text-center space-y-2">
-            <h2 class="text-2xl font-extrabold tracking-widest uppercase text-blue-400">VMax Studio</h2>
-            <p class="text-xs text-gray-400 tracking-widest uppercase">Moteur, ça tourne...</p>
+        <div class="text-center">
+            <h2 class="text-xl font-extrabold tracking-wider text-white uppercase">VMax Studio</h2>
+            <p class="text-xs text-gray-400 mt-1">Chargement de l'espace...</p>
         </div>
     </div>
 
     <!-- HEADER / NAVIGATION -->
-    <header class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800 p-3.5 sticky top-0 z-40 shadow-md">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-lg font-extrabold text-blue-400 cursor-pointer flex items-center space-x-2" @click="currentView = 'dashboard'">
-                <span class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white text-sm shadow">🎬</span>
-                <span>VMax</span>
-            </h1>
+    <header class="bg-gray-900/80 backdrop-blur-md border-b border-gray-800/80 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2.5 cursor-pointer" @click="currentView = 'dashboard'">
+                <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-600/30">🎬</div>
+                <span class="text-lg font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">VMax</span>
+            </div>
             <div class="flex items-center space-x-2">
-                <button @click="window.location.reload()" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition flex items-center space-x-1.5 shadow-sm">
-                    <span>🔄 Actualiser</span>
+                <button @click="window.location.reload()" class="text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-2 rounded-xl transition flex items-center space-x-1.5 border border-gray-700/50">
+                    <span>🔄</span>
+                    <span class="hidden sm:inline">Actualiser</span>
                 </button>
-                <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition shadow-sm">
+                <button x-show="currentView !== 'dashboard'" @click="currentView = 'dashboard'" class="text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-2 rounded-xl transition border border-gray-700/50">
                     Accueil
                 </button>
             </div>
@@ -173,59 +50,59 @@
     </header>
 
     <!-- MAIN CONTAINER -->
-    <main class="max-w-6xl mx-auto p-4 md:p-6 pt-6 space-y-6">
+    <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
 
-        <!-- 1. TABLEAU DE BORD (DASHBOARD) -->
+        <!-- 1. TABLEAU DE BORD -->
         <template x-if="currentView === 'dashboard'">
             <div class="space-y-6">
                 <div>
-                    <h2 class="text-2xl font-bold">Mes Projets Vidéo</h2>
-                    <p class="text-sm text-gray-400">Gérez vos séries, mini-séries, courts et longs métrages.</p>
+                    <h2 class="text-2xl font-bold tracking-tight text-white">Mes Projets Vidéo</h2>
+                    <p class="text-sm text-gray-400 mt-0.5">Gérez vos séries, mini-séries, courts et longs métrages.</p>
                 </div>
 
-                <!-- Grille des Projets -->
+                <!-- GRILLE DES PROJETS -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- Carte Nouveau Projet -->
-                    <div @click="showNewProjectModal = true" class="bg-gray-900 border border-blue-500/40 hover:border-blue-500 p-5 rounded-2xl cursor-pointer transition shadow-lg flex flex-col items-center justify-center text-center space-y-2.5 min-h-[140px]">
-                        <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-md">
+                    <div @click="showNewProjectModal = true" class="group bg-gradient-to-br from-blue-950/20 via-gray-900 to-gray-900 border border-blue-500/30 hover:border-blue-500/60 p-5 rounded-2xl cursor-pointer transition-all duration-200 shadow-lg flex flex-col items-center justify-center text-center space-y-2 min-h-[150px]">
+                        <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-md shadow-blue-600/30 group-hover:scale-105 transition-transform">
                             +
                         </div>
                         <div>
-                            <span class="font-bold text-sm text-white">Nouveau Projet</span>
-                            <p class="text-[11px] text-gray-400">Créer une série ou un film</p>
+                            <span class="font-bold text-sm text-white group-hover:text-blue-400 transition-colors">Nouveau Projet</span>
+                            <p class="text-xs text-gray-400 mt-0.5">Créer une série ou un film</p>
                         </div>
                     </div>
 
-                    <!-- Liste des projets existants -->
+                    <!-- Liste des projets -->
                     <template x-for="project in projects" :key="project.id">
-                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-gray-700 p-4 rounded-2xl cursor-pointer transition shadow-sm flex flex-col justify-between min-h-[140px]">
+                        <div @click="openProject(project)" class="bg-gray-900 border border-gray-800 hover:border-gray-700 p-5 rounded-2xl cursor-pointer transition-all duration-200 shadow-sm flex flex-col justify-between min-h-[150px]">
                             <div class="flex justify-between items-start gap-2">
-                                <span class="text-[10px] uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full border border-gray-800 whitespace-nowrap"
+                                <span class="text-[11px] uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full border border-gray-800"
                                     :class="{
-                                        'bg-purple-950 text-purple-300': project.type === 'serie',
-                                        'bg-blue-950 text-blue-300': project.type === 'mini_serie',
-                                        'bg-green-950 text-green-300': project.type === 'court_metrage',
-                                        'bg-amber-950 text-amber-300': project.type === 'long_metrage'
+                                        'bg-purple-950/60 text-purple-300 border-purple-900/50': project.type === 'serie',
+                                        'bg-blue-950/60 text-blue-300 border-blue-900/50': project.type === 'mini_serie',
+                                        'bg-green-950/60 text-green-300 border-green-900/50': project.type === 'court_metrage',
+                                        'bg-amber-950/60 text-amber-300 border-amber-900/50': project.type === 'long_metrage'
                                     }"
                                     x-text="formatType(project.type)">
                                 </span>
-                                <button @click.stop="deleteProject(project.id)" class="text-gray-500 hover:text-red-400 text-sm p-1.5 rounded-lg bg-gray-800/50">🗑️</button>
+                                <button @click.stop="deleteProject(project.id)" class="text-gray-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-gray-800 transition">🗑️</button>
                             </div>
-                            <div class="my-2">
+                            <div class="my-3">
                                 <h3 class="text-base font-bold text-white truncate" x-text="project.title"></h3>
                             </div>
-                            <div class="pt-2 border-t border-gray-800 text-[11px] text-gray-400 flex justify-between items-center">
-                                <span>Ouvrir l'espace</span>
-                                <span>➔</span>
+                            <div class="pt-3 border-t border-gray-800/80 text-xs text-gray-400 flex justify-between items-center">
+                                <span class="group-hover:text-white transition">Ouvrir l'espace</span>
+                                <span class="text-blue-400 font-bold">→</span>
                             </div>
                         </div>
                     </template>
                 </div>
 
-                <!-- SYNCHRONISATION & SAUVEGARDE -->
-                <div class="mt-8 bg-gray-900 border border-gray-800 p-5 rounded-3xl shadow-xl space-y-3">
+                <!-- SYNCHRONISATION -->
+                <div class="bg-gray-900 border border-gray-800 p-5 sm:p-6 rounded-2xl shadow-lg space-y-4">
                     <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-purple-950 text-purple-400 flex items-center justify-center text-base flex-shrink-0">
+                        <div class="w-10 h-10 rounded-xl bg-purple-950/80 text-purple-400 border border-purple-900/50 flex items-center justify-center text-lg flex-shrink-0">
                             🔄
                         </div>
                         <div>
@@ -233,19 +110,18 @@
                             <p class="text-xs text-gray-400">Exportez ou importez vos fichiers de sauvegarde JSON.</p>
                         </div>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
-                        <button @click="exportData()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2.5 rounded-xl transition text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-800 shadow-sm">
+                    <div class="flex flex-col sm:flex-row gap-3 pt-1">
+                        <button @click="exportData()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2.5 rounded-xl transition text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50">
                             <span class="text-emerald-400">⬇️</span>
-                            <span>Exporter (JSON)</span>
+                            <span>Exporter les données (JSON)</span>
                         </button>
-                        <label class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2.5 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-800 shadow-sm">
+                        <label class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2.5 rounded-xl transition cursor-pointer text-xs font-semibold flex items-center justify-center space-x-2 border border-gray-700/50">
                             <span class="text-amber-400">⬆️</span>
                             <span>Importer une sauvegarde</span>
                             <input type="file" accept=".json" class="hidden" @change="importData($event)">
                         </label>
                     </div>
                 </div>
-
             </div>
         </template>
 
@@ -253,19 +129,19 @@
         <template x-if="currentView === 'projectDetail' && currentProject">
             <div class="space-y-6">
                 <!-- Fil d'Ariane -->
-                <div class="bg-gray-900 border border-gray-800 px-4 py-2.5 rounded-2xl flex items-center space-x-2 text-xs sm:text-sm text-gray-400 overflow-x-auto shadow-sm">
+                <div class="bg-gray-900 border border-gray-800 px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs text-gray-400 overflow-x-auto">
                     <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
-                    <span>/</span>
+                    <span class="text-gray-600">/</span>
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[200px]" x-text="currentProject.title"></span>
                 </div>
 
                 <!-- En-tête -->
-                <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl flex items-center justify-between gap-3 shadow-lg">
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
                     <div class="overflow-hidden">
-                        <h2 class="text-lg sm:text-xl font-bold truncate" x-text="currentProject.title"></h2>
-                        <p class="text-[11px] text-gray-400 capitalize mt-0.5" x-text="'Type : ' + formatType(currentProject.type)"></p>
+                        <h2 class="text-xl font-bold truncate text-white" x-text="currentProject.title"></h2>
+                        <p class="text-xs text-gray-400 capitalize mt-0.5" x-text="'Type : ' + formatType(currentProject.type)"></p>
                     </div>
-                    <button @click="renameProject(currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-800 whitespace-nowrap flex-shrink-0">
+                    <button @click="renameProject(currentProject)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition border border-gray-700/50 whitespace-nowrap">
                         Renommer
                     </button>
                 </div>
@@ -276,30 +152,30 @@
                         <div class="flex items-center space-x-2 overflow-x-auto pb-1">
                             <template x-for="season in currentProject.seasons" :key="season.id">
                                 <button @click="activeSeasonId = season.id" 
-                                        class="px-3.5 py-2 rounded-xl text-xs font-semibold transition flex-shrink-0 border border-gray-800"
-                                        :class="activeSeasonId === season.id ? 'bg-blue-600 text-white shadow' : 'bg-gray-900 text-gray-400 hover:text-white'"
+                                        class="px-4 py-2 rounded-xl text-xs font-semibold transition flex-shrink-0 border"
+                                        :class="activeSeasonId === season.id ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-600/20' : 'bg-gray-900 text-gray-400 border-gray-800 hover:text-white'"
                                         x-text="'Saison ' + season.seasonNumber">
                                 </button>
                             </template>
-                            <button @click="addSeason(currentProject.id)" class="px-3 py-2 rounded-xl text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-800 flex-shrink-0 whitespace-nowrap">
+                            <button @click="addSeason(currentProject.id)" class="px-3.5 py-2 rounded-xl text-xs font-medium bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700/50 flex-shrink-0">
                                 + Saison
                             </button>
                         </div>
 
                         <!-- Contenu Saison -->
                         <template x-if="getActiveSeason()">
-                            <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl space-y-4 shadow-md">
+                            <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-4 shadow-md">
                                 <div class="flex justify-between items-center">
                                     <h4 class="font-bold text-sm text-blue-400" x-text="'Saison ' + getActiveSeason().seasonNumber"></h4>
                                     <div class="flex items-center space-x-2">
-                                        <button @click="deleteSeason(currentProject.id, getActiveSeason().id)" class="text-[11px] text-red-400 bg-red-950 border border-red-900 px-2.5 py-1 rounded-lg">Supprimer</button>
-                                        <button @click="addEpisode(currentProject.id, getActiveSeason().id)" class="text-[11px] bg-blue-950 text-blue-300 border border-blue-800 px-2.5 py-1 rounded-lg">+ Épisode</button>
+                                        <button @click="deleteSeason(currentProject.id, getActiveSeason().id)" class="text-xs text-red-400 bg-red-950/60 border border-red-900/50 px-2.5 py-1.5 rounded-lg">Supprimer</button>
+                                        <button @click="addEpisode(currentProject.id, getActiveSeason().id)" class="text-xs bg-blue-950/60 text-blue-300 border border-blue-900/50 px-3 py-1.5 rounded-lg">+ Épisode</button>
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                     <template x-for="episode in getActiveSeason().episodes" :key="episode.id">
-                                        <div class="bg-gray-950 border border-gray-800 p-3 rounded-xl transition flex justify-between items-center">
+                                        <div class="bg-gray-950 border border-gray-800 hover:border-gray-700 p-3.5 rounded-xl transition flex justify-between items-center">
                                             <div @click="openEpisode(episode)" class="overflow-hidden pr-2 flex-1 cursor-pointer">
                                                 <span class="text-[10px] text-gray-500 block" x-text="'Épisode ' + episode.episodeNumber"></span>
                                                 <span class="font-semibold text-white text-xs block truncate" x-text="episode.title"></span>
@@ -328,65 +204,65 @@
         <template x-if="currentView === 'episodeDetail' && currentEpisode">
             <div class="space-y-6">
                 <!-- Fil d'Ariane -->
-                <div class="bg-gray-900 border border-gray-800 px-4 py-2.5 rounded-2xl flex items-center space-x-2 text-xs sm:text-sm text-gray-400 overflow-x-auto shadow-sm">
+                <div class="bg-gray-900 border border-gray-800 px-4 py-2.5 rounded-xl flex items-center space-x-2 text-xs text-gray-400 overflow-x-auto">
                     <span class="cursor-pointer hover:text-white whitespace-nowrap" @click="currentView = 'dashboard'">Accueil</span>
-                    <span>/</span>
+                    <span class="text-gray-600">/</span>
                     <span class="cursor-pointer hover:text-white whitespace-nowrap truncate max-w-[100px]" @click="currentView = 'projectDetail'" x-text="currentProject.title"></span>
-                    <span>/</span>
+                    <span class="text-gray-600">/</span>
                     <span class="text-white font-medium whitespace-nowrap truncate max-w-[100px]" x-text="currentEpisode.title"></span>
                 </div>
 
                 <!-- En-tête -->
-                <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl flex items-center justify-between gap-3 shadow-lg">
+                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex items-center justify-between gap-4 shadow-lg">
                     <div class="overflow-hidden">
-                        <h2 class="text-lg sm:text-xl font-bold truncate" x-text="currentEpisode.title"></h2>
-                        <p class="text-[11px] text-gray-400">Espace de travail : Script, Prompt et Rushes.</p>
+                        <h2 class="text-xl font-bold truncate text-white" x-text="currentEpisode.title"></h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Espace de travail : Script, Prompt et Rushes.</p>
                     </div>
-                    <button @click="renameEpisode(currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-xl transition border border-gray-800 whitespace-nowrap flex-shrink-0">
+                    <button @click="renameEpisode(currentEpisode)" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 px-3.5 py-2 rounded-xl transition border border-gray-700/50 whitespace-nowrap">
                         Renommer
                     </button>
                 </div>
 
                 <!-- SCRIPT & PROMPT -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl space-y-2.5 shadow-md">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
-                            <label class="font-bold text-xs text-gray-300 uppercase tracking-wide">Script</label>
-                            <button @click="copyText(currentEpisode.script, 'script')" class="text-[11px] bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
+                            <label class="font-bold text-xs text-gray-300 uppercase tracking-wider">Script</label>
+                            <button @click="copyText(currentEpisode.script, 'script')" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition" x-text="copiedScript ? 'Copié !' : 'Copier'"></button>
                         </div>
-                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="8" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs focus:outline-none focus:border-blue-500 text-white"></textarea>
+                        <textarea x-model="currentEpisode.script" @input="saveData()" rows="10" placeholder="Rédigez ou collez votre script ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs focus:outline-none focus:border-blue-500 text-white leading-relaxed"></textarea>
                     </div>
 
-                    <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl space-y-2.5 shadow-md">
+                    <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-md">
                         <div class="flex justify-between items-center">
-                            <label class="font-bold text-xs text-gray-300 uppercase tracking-wide">Prompt</label>
-                            <button @click="copyText(currentEpisode.prompts, 'prompts')" class="text-[11px] bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg transition" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
+                            <label class="font-bold text-xs text-gray-300 uppercase tracking-wider">Prompt</label>
+                            <button @click="copyText(currentEpisode.prompts, 'prompts')" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg transition" x-text="copiedPrompts ? 'Copié !' : 'Copier'"></button>
                         </div>
-                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="8" placeholder="Collez vos prompts ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs focus:outline-none focus:border-blue-500 text-white"></textarea>
+                        <textarea x-model="currentEpisode.prompts" @input="saveData()" rows="10" placeholder="Collez vos prompts ici..." class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs focus:outline-none focus:border-blue-500 text-white leading-relaxed"></textarea>
                     </div>
                 </div>
 
                 <!-- MÉDIAS ORIGINAUX -->
-                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-lg">
+                <div class="bg-gray-900 border border-gray-800 p-5 sm:p-6 rounded-2xl space-y-4 shadow-lg">
                     <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-sm">📁 Fichiers Originaux</h3>
-                        <label class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-3.5 py-2 rounded-xl cursor-pointer transition shadow">
+                        <h3 class="font-bold text-sm text-white">📁 Fichiers Originaux</h3>
+                        <label class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-4 py-2 rounded-xl cursor-pointer transition shadow-md shadow-blue-600/20">
                             + Ajouter
                             <input type="file" class="hidden" @change="addMedia($event, 'original')">
                         </label>
                     </div>
 
-                    <div class="space-y-2">
+                    <div class="space-y-2.5">
                         <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === 'original')" :key="media.id">
-                            <div class="bg-gray-950 border border-gray-800 p-3 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
-                                <div class="flex items-center space-x-2 overflow-hidden w-full sm:w-auto">
+                            <div class="bg-gray-950 border border-gray-800 p-3.5 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
+                                <div class="flex items-center space-x-2.5 overflow-hidden w-full sm:w-auto">
                                     <span class="text-base flex-shrink-0" x-text="mediaIcon(media.type)"></span>
-                                    <span class="font-medium text-white truncate max-w-[180px]" x-text="media.name"></span>
+                                    <span class="font-medium text-white truncate max-w-[200px]" x-text="media.name"></span>
                                 </div>
-                                <div class="flex items-center space-x-1.5 w-full sm:w-auto justify-end">
-                                    <button @click="previewMedia(media)" class="text-blue-300 bg-blue-950 border border-blue-800 px-2.5 py-1 rounded-lg font-medium">Lire ▶️</button>
-                                    <a :href="media.url" :download="media.name" class="text-gray-300 bg-gray-800 px-2.5 py-1 rounded-lg">Télécharger</a>
-                                    <button @click="deleteMedia(media.id)" class="text-red-400 bg-red-950 border border-red-900 px-2 py-1 rounded-lg">✕</button>
+                                <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                                    <button @click="previewMedia(media)" class="text-blue-300 bg-blue-950/80 border border-blue-900/50 px-3 py-1.5 rounded-lg font-medium">Lire ▶️</button>
+                                    <a :href="media.url" :download="media.name" class="text-gray-300 bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg">Télécharger</a>
+                                    <button @click="deleteMedia(media.id)" class="text-red-400 bg-red-950/60 border border-red-900/50 px-2.5 py-1.5 rounded-lg">✕</button>
                                 </div>
                             </div>
                         </template>
@@ -397,28 +273,28 @@
                 </div>
 
                 <!-- FORMATS RÉSEAUX SOCIAUX -->
-                <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl space-y-3 shadow-lg">
-                    <h3 class="font-bold text-sm">📱 Formats Réseaux Sociaux</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div class="bg-gray-900 border border-gray-800 p-5 sm:p-6 rounded-2xl space-y-4 shadow-lg">
+                    <h3 class="font-bold text-sm text-white">📱 Formats Réseaux Sociaux</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <template x-for="fmt in ['youtube', 'youtube_shorts', 'tiktok', 'instagram', 'facebook']">
-                            <div class="bg-gray-950 border border-gray-800 p-3.5 rounded-xl space-y-2.5">
+                            <div class="bg-gray-950 border border-gray-800 p-4 rounded-xl space-y-3">
                                 <div class="flex justify-between items-center">
                                     <span class="font-bold text-xs text-blue-400 capitalize" x-text="fmt.replace('_', ' ')"></span>
-                                    <label class="text-[11px] bg-gray-800 hover:bg-gray-700 px-2.5 py-1 rounded-lg cursor-pointer text-white">
+                                    <label class="text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-200 px-2.5 py-1 rounded-lg cursor-pointer">
                                         + Ajouter
                                         <input type="file" class="hidden" @change="addMedia($event, fmt)">
                                     </label>
                                 </div>
-                                <div class="space-y-1.5">
+                                <div class="space-y-2">
                                     <template x-for="media in currentEpisode.mediaAssets.filter(m => m.format === fmt)" :key="media.id">
-                                        <div class="bg-gray-900 p-2.5 rounded-lg flex flex-col space-y-1.5 text-[11px] border border-gray-800">
+                                        <div class="bg-gray-900 p-2.5 rounded-xl flex flex-col space-y-2 text-[11px] border border-gray-800">
                                             <div class="flex justify-between items-center">
-                                                <span class="font-medium text-white truncate max-w-[140px]" x-text="media.name"></span>
+                                                <span class="font-medium text-white truncate max-w-[150px]" x-text="media.name"></span>
                                                 <button @click="deleteMedia(media.id)" class="text-red-400">✕</button>
                                             </div>
-                                            <div class="flex space-x-1.5 pt-1 border-t border-gray-800">
-                                                <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950 py-1 rounded text-center font-semibold">Lire</button>
-                                                <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1 rounded text-center">Sauver</a>
+                                            <div class="flex space-x-2 pt-1 border-t border-gray-800">
+                                                <button @click="previewMedia(media)" class="flex-1 text-blue-300 bg-blue-950/80 py-1.5 rounded-lg text-center font-semibold">Lire ▶️</button>
+                                                <a :href="media.url" :download="media.name" class="flex-1 text-gray-300 bg-gray-800 py-1.5 rounded-lg text-center">Sauver</a>
                                             </div>
                                         </div>
                                     </template>
@@ -433,27 +309,27 @@
 
     <!-- MODALE LECTEUR -->
     <template x-if="showPreviewModal && previewMediaItem">
-        <div class="fixed inset-0 bg-gray-950/95 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="fixed inset-0 bg-gray-950/90 backdrop-blur-md flex items-center justify-center p-4 z-50">
             <div class="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                <div class="flex justify-between items-center px-4 py-3 bg-gray-950 border-b border-gray-800">
-                    <div class="flex items-center space-x-2 overflow-hidden">
+                <div class="flex justify-between items-center px-5 py-4 bg-gray-950 border-b border-gray-800">
+                    <div class="flex items-center space-x-2.5 overflow-hidden">
                         <span class="text-xl" x-text="mediaIcon(previewMediaItem.type)"></span>
-                        <h3 class="font-bold text-xs sm:text-sm text-white truncate" x-text="previewMediaItem.name"></h3>
+                        <h3 class="font-bold text-sm text-white truncate" x-text="previewMediaItem.name"></h3>
                     </div>
-                    <button @click="closePreview()" class="w-8 h-8 bg-gray-800 text-gray-300 rounded-full flex items-center justify-center text-xs">✕</button>
+                    <button @click="closePreview()" class="w-8 h-8 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-full flex items-center justify-center text-xs">✕</button>
                 </div>
-                <div class="flex-1 flex items-center justify-center bg-gray-950 p-3 max-h-[60vh] overflow-hidden">
+                <div class="flex-1 flex items-center justify-center bg-gray-950 p-4 max-h-[60vh] overflow-hidden">
                     <template x-if="previewMediaItem.type === 'video'">
-                        <video :src="previewMediaItem.url" controls autoplay playsinline class="max-h-[55vh] rounded-lg border border-gray-800"></video>
+                        <video :src="previewMediaItem.url" controls autoplay playsinline class="max-h-[55vh] rounded-xl border border-gray-800"></video>
                     </template>
                     <template x-if="previewMediaItem.type === 'audio'">
                         <audio :src="previewMediaItem.url" controls autoplay class="w-full"></audio>
                     </template>
                     <template x-if="previewMediaItem.type === 'image'">
-                        <img :src="previewMediaItem.url" class="max-w-full max-h-[55vh] object-contain rounded-lg border border-gray-800">
+                        <img :src="previewMediaItem.url" class="max-w-full max-h-[55vh] object-contain rounded-xl border border-gray-800">
                     </template>
                 </div>
-                <div class="flex justify-end px-4 py-3 bg-gray-950 border-t border-gray-800">
+                <div class="flex justify-end px-5 py-4 bg-gray-950 border-t border-gray-800">
                     <button @click="closePreview()" class="px-4 py-2 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-xl">Fermer</button>
                 </div>
             </div>
@@ -463,33 +339,33 @@
     <!-- MODALE CRÉATION PROJET -->
     <template x-if="showNewProjectModal">
         <div class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div class="bg-gray-900 border border-gray-800 p-5 rounded-3xl w-full max-w-md space-y-4 shadow-2xl">
+            <div class="bg-gray-900 border border-gray-800 p-6 rounded-3xl w-full max-w-md space-y-4 shadow-2xl">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold">Nouveau Projet</h3>
-                    <button @click="showNewProjectModal = false" class="text-gray-400">✕</button>
+                    <h3 class="text-lg font-bold text-white">Nouveau Projet</h3>
+                    <button @click="showNewProjectModal = false" class="text-gray-400 hover:text-white">✕</button>
                 </div>
-                <div class="space-y-1">
-                    <label class="text-[11px] font-medium text-gray-400">Titre du projet</label>
-                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Film" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-gray-400">Titre du projet</label>
+                    <input type="text" x-model="newProjectTitle" placeholder="Ex: Mon Film" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-blue-500">
                 </div>
-                <div class="space-y-1">
-                    <label class="text-[11px] font-medium text-gray-400">Type</label>
-                    <select x-model="newProjectType" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-blue-500">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-medium text-gray-400">Type de projet</label>
+                    <select x-model="newProjectType" class="w-full bg-gray-950 border border-gray-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-blue-500">
                         <option value="serie">Série entière</option>
                         <option value="mini_serie">Mini-série</option>
                         <option value="court_metrage">Court-métrage</option>
                         <option value="long_metrage">Long-métrage</option>
                     </select>
                 </div>
-                <div class="flex justify-end space-x-2 pt-2">
-                    <button @click="showNewProjectModal = false" class="px-3.5 py-2 text-xs bg-gray-800 text-gray-300 rounded-xl">Annuler</button>
-                    <button @click="createProject()" class="px-4 py-2 text-xs bg-blue-600 text-white rounded-xl font-semibold">Créer</button>
+                <div class="flex justify-end space-x-2.5 pt-2">
+                    <button @click="showNewProjectModal = false" class="px-4 py-2 text-xs font-semibold bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl">Annuler</button>
+                    <button @click="createProject()" class="px-5 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-md">Créer</button>
                 </div>
             </div>
         </div>
     </template>
 
-    <!-- SCRIPT LOGIQUE -->
+    <!-- JAVASCRIPT -->
     <script>
         function appData() {
             return {
@@ -510,7 +386,7 @@
                 touchStartY: 0,
 
                 initApp() {
-                    setTimeout(() => { this.isLoading = false; }, 1000);
+                    setTimeout(() => { this.isLoading = false; }, 800);
 
                     window.addEventListener('touchstart', (e) => {
                         this.touchStartX = e.touches[0].clientX;
